@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Repositorio;
+using Servicio;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +32,8 @@ namespace Psicologia
             services.AddDbContext<PsicologiaContext>(options =>
                 options.UseSqlServer(
                 Configuration.GetConnectionString("DefaultConnection")));
+            services.AddScoped<IBlogRepository, BlogRepository>();
+            services.AddScoped<IBlogService, BlogService>();
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(
