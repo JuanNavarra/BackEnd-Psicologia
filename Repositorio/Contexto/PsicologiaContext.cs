@@ -83,6 +83,18 @@
                     .IsRequired()
                     .HasColumnName("titulo");
 
+                entity.Property(e => e.Slug)
+                    .IsRequired()
+                    .HasColumnName("slug");
+
+                entity.Property(e => e.Cita)
+                    .IsRequired(false)
+                    .HasColumnName("cita");
+
+                entity.Property(e => e.Autorcita)
+                    .IsRequired(false)
+                    .HasColumnName("autorcita");
+
                 entity.HasOne(d => d.IdcategoriaNavigation)
                     .WithMany(p => p.Blogs)
                     .HasForeignKey(d => d.Idcategoria);

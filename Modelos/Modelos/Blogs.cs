@@ -11,6 +11,9 @@ namespace Modelos
         }
 
         public int Idblog { get; set; }
+        public string Slug { get; set; }
+        public string Cita { get; set; }
+        public string Autorcita { get; set; }
         public string Titulo { get; set; }
         public string Subtitulo { get; set; }
         public string Descripcion { get; set; }

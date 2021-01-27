@@ -5,7 +5,7 @@
     using System.Collections.Generic;
     using System.Text;
 
-    public class BlogDto
+    public class BlogDetalleDto
     {
         public string Slug { get; set; }
         public string Titulo { get; set; }
@@ -18,5 +18,7 @@
         public string ImagenPost { get; set; }
         public List<KeyWordDto> KeyWords { get; set; }
         public int IdBlog { get; set; }
+        public string Cita { get; set; }
+        public string AutorCita { get; set; }
     }
 }

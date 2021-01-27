@@ -12,5 +12,16 @@
         /// </summary>
         /// <returns></returns>
         public List<BlogDto> MostrarListadoEntradas();
+        /// <summary>
+        /// Obtiene una unica entrada dado un slug
+        /// </summary>
+        /// <param name="slug"></param>
+        /// <returns></returns>
+        public BlogDetalleDto MostrarEntradaPorSlug(string slug);
+        /// <summary>
+        /// Lista los 5 post mas recientes
+        /// </summary>
+        /// <returns></returns>
+        public List<PostRecienteDto> ListarRecientes();
     }
 }
