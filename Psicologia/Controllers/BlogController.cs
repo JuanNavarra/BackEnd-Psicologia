@@ -86,6 +86,48 @@
                 throw;
             }
         }
+
+        /// <summary>
+        /// Lista todos los comentarios de un post especifico por orden de creacion
+        /// </summary>
+        /// <param name="slug"></param>
+        /// <returns></returns>
+        [HttpGet("comentarios-post/{slug}")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult MostrarComentarios(string slug)
+        {
+            try
+            {
+                List<ComentarioDto> comentarios = this.blogService.MostrarComentarios(slug);
+                return Json(comentarios);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Guarda el comentario de un post en especifico
+        /// </summary>
+        /// <param name="comentarioDto"></param>
+        /// <returns></returns>
+        [HttpPost("guardar-comentario")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult GuardarComentario(ComentarioSavedDto comentarioDto)
+        {
+            try
+            {
+                ApiCallResult result = this.blogService.GuardarComentario(comentarioDto);
+                return Json(result);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
         #endregion
     }
 }

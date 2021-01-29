@@ -23,5 +23,17 @@
         /// </summary>
         /// <returns></returns>
         public List<PostRecienteDto> ListarRecientes();
+        /// <summary>
+        /// Lista todos los comentarios de un post en especifico
+        /// </summary>
+        /// <param name="slug"></param>
+        /// <returns></returns>
+        public List<ComentarioDto> MostrarComentarios(string slug);
+        /// <summary>
+        /// Guarda el comentario de un post en especifico
+        /// </summary>
+        /// <param name="comentarioDto"></param>
+        /// <returns></returns>
+        public ApiCallResult GuardarComentario(ComentarioSavedDto comentarioDto);
     }
 }

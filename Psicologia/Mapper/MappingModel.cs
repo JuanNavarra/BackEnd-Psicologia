@@ -5,6 +5,8 @@
 namespace Psicologia
 {
     using AutoMapper;
+    using Modelos;
+    using Dtos;
     using System;
     using System.Collections.Generic;
     using System.Text;
@@ -14,6 +16,8 @@ namespace Psicologia
         #region Construnctores
         public MappingModel()
         {
+            CreateMap<Comentarios, ComentarioSavedDto>();
+            CreateMap<ComentarioSavedDto, Comentarios>();
         }
         #endregion
     }

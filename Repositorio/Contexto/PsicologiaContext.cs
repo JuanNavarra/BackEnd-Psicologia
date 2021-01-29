@@ -13,6 +13,7 @@
         {
         }
         #endregion
+
         #region Entidades
         public virtual DbSet<BlogKey> BlogKey { get; set; }
         public virtual DbSet<Blogs> Blogs { get; set; }
@@ -20,7 +21,9 @@
         public virtual DbSet<Imagenes> Imagenes { get; set; }
         public virtual DbSet<KeyWords> KeyWords { get; set; }
         public virtual DbSet<Usuarios> Usuarios { get; set; }
+        public virtual DbSet<Comentarios> Comentarios { get; set; }
         #endregion
+
         #region Fluent Api
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -210,6 +213,31 @@
                 entity.HasOne(d => d.IdimagenNavigation)
                     .WithMany(p => p.Usuarios)
                     .HasForeignKey(d => d.Idimagen);
+            });
+
+            modelBuilder.Entity<Comentarios>(entity =>
+            {
+                entity.HasKey(e => e.Idcomentario);
+
+                entity.ToTable("Comentarios", "rec");
+
+                entity.Property(e => e.Idcomentario).HasColumnName("idcomentario");
+
+                entity.Property(e => e.Comentario)
+                    .IsRequired()
+                    .HasColumnName("comentario");
+
+                entity.Property(e => e.Creador)
+                    .IsRequired()
+                    .HasColumnName("creador");
+
+                entity.Property(e => e.Email).HasColumnName("email");
+
+                entity.Property(e => e.Fechacreaciion)
+                    .HasColumnName("fechacreaciion")
+                    .HasColumnType("date");
+
+                entity.Property(e => e.Idblog).HasColumnName("idblog");
             });
 
             OnModelCreatingPartial(modelBuilder);

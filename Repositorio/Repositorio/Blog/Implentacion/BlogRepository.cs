@@ -142,9 +142,53 @@
                                                FechaCreacion = t0.Fechacreacion,
                                                Slug = t0.Slug,
                                                Imagen = t1.Ruta,
-                                               Titulo = t0.Titulo
+                                               Titulo = t0.Titulo,
                                            }).Take(5).ToList();
             return posts.OrderByDescending(o => o.FechaCreacion).ToList(); ;
+        }
+
+        /// <summary>
+        /// Lista todos los comentarios de un post en especifico
+        /// </summary>
+        /// <param name="slug"></param>
+        /// <returns></returns>
+        public List<ComentarioDto> MostrarComentarios(string slug)
+        {
+            try
+            {
+                Blogs blog = this.ObtenerSlug(slug);
+                if (blog is null)
+                    throw new Exception("No existe el blog");
+                List<ComentarioDto> comentarios = context.Comentarios
+                    .Where(w => w.Idblog == blog.Idblog).Select(s => new ComentarioDto
+                    {
+                        Comentario = s.Comentario,
+                        Creador = s.Creador,
+                        Fechacreacion = s.Fechacreaciion
+                    }).ToList();
+                return comentarios.OrderByDescending(o => o.Fechacreacion).ToList();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Guarda el comentario de post
+        /// </summary>
+        /// <param name="comentario"></param>
+        public void GuardarComentario(Comentarios comentario)
+        {
+            try
+            {
+                context.Comentarios.Add(comentario);
+                context.SaveChanges();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
         #endregion
     }

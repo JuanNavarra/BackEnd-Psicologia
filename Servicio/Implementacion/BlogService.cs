@@ -76,6 +76,56 @@
                 throw;
             }
         }
+
+        /// <summary>
+        /// Lista todos los comentarios de un post en especifico
+        /// </summary>
+        /// <param name="slug"></param>
+        /// <returns></returns>
+        public List<ComentarioDto> MostrarComentarios(string slug)
+        {
+            try
+            {
+                List<ComentarioDto> comentarios = this.blogRepository.MostrarComentarios(slug);
+                return comentarios;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Guarda el comentario de un post en especifico
+        /// </summary>
+        /// <param name="comentarioDto"></param>
+        /// <returns></returns>
+        public ApiCallResult GuardarComentario(ComentarioSavedDto comentarioDto)
+        {
+            try
+            {
+                Blogs blog = this.blogRepository.ObtenerSlug(comentarioDto.Slug);
+                if (blog is null)
+                    throw new Exception("No existe la entrada");
+                Comentarios comentario = mapper.Map<Comentarios>(comentarioDto);
+                comentario.Idblog = blog.Idblog;
+                comentario.Fechacreaciion = DateTime.Now;
+                this.blogRepository.GuardarComentario(comentario);
+                return new ApiCallResult
+                {
+                    Estado = true,
+                    Mensaje = "Comentario guardado"
+                };
+            }
+            catch (Exception e)
+            {
+                return new ApiCallResult
+                {
+                    Estado = false,
+                    Mensaje = $"Error en {e.Message}"
+                };
+            }
+        }
         #endregion
     }
 }
