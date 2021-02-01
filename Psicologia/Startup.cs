@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -8,11 +9,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Repositorio;
 using Servicio;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Psicologia
@@ -34,12 +37,36 @@ namespace Psicologia
                 Configuration.GetConnectionString("DefaultConnection")));
             services.AddScoped<IBlogRepository, BlogRepository>();
             services.AddScoped<IBlogService, BlogService>();
+            services.AddScoped<IPrincipalRepository, PrincipalRepository>();
+            services.AddScoped<IPrincipalService, PrincipalService>();
+            services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+            services.AddScoped<IUsuarioService, UsuarioService>();
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(jwtBearerOptions =>
+            {
+                jwtBearerOptions.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+                {
+                    SaveSigninToken = true,
+                    ValidateActor = true,
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = Configuration["ApiAuth:Issuer"],
+                    ValidAudience = Configuration["ApiAuth:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["ApiAuth:SecretKey"]))
+                };
+            });
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(
                     builder =>
                     {
-                        builder.WithOrigins("http://localhost:4200")
+                        builder.WithOrigins("http://localhost:4200", "http://localhost:4201")
                                .AllowAnyMethod()
                                .AllowAnyHeader();
                     });
@@ -61,6 +88,9 @@ namespace Psicologia
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
             // specifying the Swagger JSON endpoint.

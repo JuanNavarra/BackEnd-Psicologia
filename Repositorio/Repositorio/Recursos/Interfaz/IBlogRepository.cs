@@ -39,5 +39,16 @@
         /// </summary>
         /// <param name="comentario"></param>
         public void GuardarComentario(Comentarios comentario);
+        /// <summary>
+        /// Hace una busqueda de los posts con la coincidencia de busqueda
+        /// </summary>
+        /// <param name="busqueda"></param>
+        /// <returns></returns>
+        public List<BusquedaDto> BuscarPost(string busqueda);
+        /// <summary>
+        /// Lista todas las categorias con la catidad de post que tienen
+        /// </summary>
+        /// <returns></returns>
+        public List<CategoriasDto> ListarCategorias();
     }
 }

@@ -31,9 +31,8 @@
                 Blogs blog = this.context.Blogs.Where(w => w.Estado && w.Slug == slug).FirstOrDefault();
                 return blog;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-
                 throw;
             }
         }
@@ -104,7 +103,7 @@
                                            SubTitulo = t0.Subtitulo,
                                            Categoria = t3.Nombre,
                                            Creador = t4.Nombre + " " + t4.Apellido,
-                                           Descripcion = t0.Descripcion,
+                                           Descripcion = t0.Descripcion.Length > 500 ? t0.Descripcion.Substring(0, 499) : t0.Descripcion,
                                            FechaCreacion = t0.Fechacreacion,
                                            ImagenCreador = t5.Ruta,
                                            ImagenPost = t6.Ruta,
@@ -184,6 +183,62 @@
             {
                 context.Comentarios.Add(comentario);
                 context.SaveChanges();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Hace una busqueda de los posts con la coincidencia de busqueda
+        /// </summary>
+        /// <param name="busqueda"></param>
+        /// <returns></returns>
+        public List<BusquedaDto> BuscarPost(string busqueda)
+        {
+            try
+            {
+                List<BusquedaDto> busquedas = (from t0 in context.Blogs
+                                               join t1 in context.BlogKey on t0.Idblog equals t1.Idblog
+                                               join t2 in context.KeyWords on t1.Idkey equals t2.Idkey
+                                               join t3 in context.Categorias on t0.Idcategoria equals t3.Idcategoria
+                                               where t0.Titulo.Contains(busqueda) || t0.Titulo.StartsWith(busqueda)
+                                               || t0.Titulo.EndsWith(busqueda) || t2.Nombre.Contains(busqueda)
+                                               || t2.Nombre.StartsWith(busqueda) || t2.Nombre.EndsWith(busqueda)
+                                               || t3.Nombre.Contains(busqueda) || t3.Nombre.StartsWith(busqueda)
+                                               || t3.Nombre.EndsWith(busqueda)
+                                               select new BusquedaDto
+                                               {
+                                                   Slug = t0.Slug,
+                                                   Titulo = t0.Titulo
+                                               }).ToList();
+
+                return busquedas;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Lista todas las categorias con la catidad de post que tienen
+        /// </summary>
+        /// <returns></returns>
+        public List<CategoriasDto> ListarCategorias()
+        {
+            try
+            {
+                List<CategoriasDto> categorias = (from t0 in context.Blogs
+                                                  join t1 in context.Categorias on t0.Idcategoria equals t1.Idcategoria
+                                                  where t0.Estado && t1.Estado
+                                                  select new CategoriasDto
+                                                  {
+                                                      Cantidad = t0.Idblog,
+                                                      Nombre = t1.Nombre
+                                                  }).ToList();
+                return categorias;
             }
             catch (Exception)
             {

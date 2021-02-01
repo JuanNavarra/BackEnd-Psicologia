@@ -35,5 +35,22 @@
         /// <param name="comentarioDto"></param>
         /// <returns></returns>
         public ApiCallResult GuardarComentario(ComentarioSavedDto comentarioDto);
+        /// <summary>
+        /// Hace una busqueda de los posts con la coincidencia de busqueda
+        /// </summary>
+        /// <param name="busqueda"></param>
+        /// <returns></returns>
+        public List<BusquedaDto> BuscarPost(string busqueda);
+        /// <summary>
+        /// Lista todas las categorias con la catidad de post que tienen
+        /// </summary>
+        /// <returns></returns>
+        public List<CategoriasDto> ListarCategorias();
+        /// <summary>
+        /// Lista los post que tiene una categoria especifica por ordern de creacion
+        /// </summary>
+        /// <param name="categoria"></param>
+        /// <returns></returns>
+        public List<BlogDto> ListarPostCategoria(string categoria);
     }
 }

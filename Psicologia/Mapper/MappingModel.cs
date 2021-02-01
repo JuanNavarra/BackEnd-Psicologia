@@ -7,9 +7,6 @@ namespace Psicologia
     using AutoMapper;
     using Modelos;
     using Dtos;
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
 
     public class MappingModel : Profile
     {
@@ -18,6 +15,8 @@ namespace Psicologia
         {
             CreateMap<Comentarios, ComentarioSavedDto>();
             CreateMap<ComentarioSavedDto, Comentarios>();
+            CreateMap<Usuarios, UsuarioDto>();
+            CreateMap<UsuarioDto, Usuarios>();
         }
         #endregion
     }

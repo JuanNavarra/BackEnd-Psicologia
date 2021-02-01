@@ -22,6 +22,8 @@
         public virtual DbSet<KeyWords> KeyWords { get; set; }
         public virtual DbSet<Usuarios> Usuarios { get; set; }
         public virtual DbSet<Comentarios> Comentarios { get; set; }
+        public virtual DbSet<FaqDetalle> FaqDetalle { get; set; }
+        public virtual DbSet<Faqs> Faqs { get; set; }
         #endregion
 
         #region Fluent Api
@@ -238,6 +240,64 @@
                     .HasColumnType("date");
 
                 entity.Property(e => e.Idblog).HasColumnName("idblog");
+            });
+
+            modelBuilder.Entity<FaqDetalle>(entity =>
+            {
+                entity.HasKey(e => e.Idfaqdetalle);
+
+                entity.ToTable("FaqDetalle", "prin");
+
+                entity.Property(e => e.Idfaqdetalle).HasColumnName("idfaqdetalle");
+
+                entity.Property(e => e.Contenido)
+                    .IsRequired()
+                    .HasColumnName("contenido");
+
+                entity.Property(e => e.Estado).HasColumnName("estado");
+
+                entity.Property(e => e.Fechaactualizacion)
+                    .HasColumnName("fechaactualizacion")
+                    .HasColumnType("date");
+
+                entity.Property(e => e.Fechacreacion)
+                    .HasColumnName("fechacreacion")
+                    .HasColumnType("date");
+
+                entity.Property(e => e.Idfaq).HasColumnName("idfaq");
+
+                entity.Property(e => e.Titulo)
+                    .IsRequired()
+                    .HasColumnName("titulo");
+
+                entity.HasOne(d => d.IdfaqNavigation)
+                    .WithMany(p => p.FaqDetalle)
+                    .HasForeignKey(d => d.Idfaq)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_faq_faqid");
+            });
+
+            modelBuilder.Entity<Faqs>(entity =>
+            {
+                entity.HasKey(e => e.Idfaq);
+
+                entity.ToTable("Faqs", "prin");
+
+                entity.Property(e => e.Idfaq).HasColumnName("idfaq");
+
+                entity.Property(e => e.Estado).HasColumnName("estado");
+
+                entity.Property(e => e.Fechaactualizacion)
+                    .HasColumnName("fechaactualizacion")
+                    .HasColumnType("date");
+
+                entity.Property(e => e.Fechacreacion)
+                    .HasColumnName("fechacreacion")
+                    .HasColumnType("date");
+
+                entity.Property(e => e.Titulo)
+                    .IsRequired()
+                    .HasColumnName("titulo");
             });
 
             OnModelCreatingPartial(modelBuilder);
