@@ -4,9 +4,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Servicio;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Psicologia
 {
@@ -31,8 +28,9 @@ namespace Psicologia
         /// </summary>
         /// <returns></returns>
         [HttpGet("faqs")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult MostrarFaq()
         {
             try
@@ -40,9 +38,13 @@ namespace Psicologia
                 FaqsDto faqs = this.principalService.MostrarFaq();
                 return Json(faqs);
             }
-            catch (Exception)
+            catch (NegocioExecption e)
             {
-                throw;
+                return StatusCode((int)System.Net.HttpStatusCode.NotFound, e.Message);
+            }
+            catch (Exception e)
+            {
+                return StatusCode((int)System.Net.HttpStatusCode.InternalServerError, e.Message);
             }
         }
         #endregion

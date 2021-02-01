@@ -25,7 +25,6 @@
         }
         #endregion
         #region Metodos y funciones
-
         /// <summary>
         /// Obtiene una entrada unica dado un slug
         /// </summary>
