@@ -6,9 +6,7 @@
     using Modelos;
     using Repositorio;
     using System;
-    using System.Collections.Generic;
     using System.IdentityModel.Tokens.Jwt;
-    using System.Text;
 
     public class UsuarioService : IUsuarioService
     {
@@ -35,14 +33,13 @@
         {
             try
             {
-                Usuarios input = mapper.Map<Usuarios>(usuarioDto);
-                bool usuario = this.usuarioRepository.Login(input);
-                if (usuario)
+                Usuarios crendenciales = mapper.Map<Usuarios>(usuarioDto);
+                crendenciales.Pass = Seguridad.Encrypt(crendenciales.Pass, _configuration["ApiAuth:ClaveIV"]);
+                bool usuario = this.usuarioRepository.Login(crendenciales);
+                if (!usuario)
                 {
                     throw new NegocioExecption("El usuario no existe", 401);
-                }
-
-                //Genera el token
+                }              
 
                 string[] login = new string[]
                 {
