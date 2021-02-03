@@ -39,7 +39,7 @@
                 string token = this.usuarioService.Login(usuarioDto);
                 return Ok(new
                 {
-                    response = StatusCode((int)System.Net.HttpStatusCode.OK, token),
+                    response = token,
                 });
             }
             catch (NegocioExecption e)

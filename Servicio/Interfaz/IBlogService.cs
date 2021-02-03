@@ -52,5 +52,10 @@
         /// <param name="categoria"></param>
         /// <returns></returns>
         public List<BlogDto> ListarPostCategoria(string categoria);
+        /// <summary>
+        /// Lista las palabras clave disponibles
+        /// </summary>
+        /// <returns></returns>
+        public List<KeyWordDto> ListarKeyWords();
     }
 }

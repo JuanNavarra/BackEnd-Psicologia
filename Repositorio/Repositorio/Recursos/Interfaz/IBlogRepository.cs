@@ -50,5 +50,10 @@
         /// </summary>
         /// <returns></returns>
         public List<CategoriasDto> ListarCategorias();
+        /// <summary>
+        /// Lista las palabras clave disponibles
+        /// </summary>
+        /// <returns></returns>
+        public List<KeyWords> ListarKeyWords();
     }
 }

@@ -17,6 +17,10 @@ namespace Psicologia
             CreateMap<ComentarioSavedDto, Comentarios>();
             CreateMap<Usuarios, UsuarioDto>();
             CreateMap<UsuarioDto, Usuarios>();
+            CreateMap<KeyWords, KeyWordDto>()
+                .ForMember(s => s.Id, option => option.MapFrom(o => o.Idkey));
+            CreateMap<KeyWordDto, KeyWords>()
+                .ForMember(s => s.Idkey, option => option.MapFrom(o => o.Id)); ;
         }
         #endregion
     }

@@ -38,7 +38,7 @@
                 BlogDetalleDto blogDto = this.blogRepository.MostrarEntradaPorSlug(slug);
                 return blogDto;
             }
-            catch (NegocioExecption e)
+            catch (NegocioExecption)
             {
                 throw;
             }
@@ -189,6 +189,7 @@
                     .Select(group => new CategoriasDto
                     {
                         Nombre = group.Key,
+                        Id = group.Select(s => s.Id).FirstOrDefault(),
                         Cantidad = group.Count()
                     }).OrderBy(x => x.Cantidad))
                 {
@@ -197,7 +198,8 @@
                         CategoriasDto categoriasDto = new CategoriasDto
                         {
                             Cantidad = line.Cantidad,
-                            Nombre = line.Nombre
+                            Nombre = line.Nombre,
+                            Id = line.Id
                         };
                         categoriasDtos.Add(categoriasDto);
                     }
@@ -224,6 +226,24 @@
                     .OrderByDescending(o => o.FechaCreacion)
                     .ToList();
                 return blogs;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Lista las palabras clave disponibles
+        /// </summary>
+        /// <returns></returns>
+        public List<KeyWordDto> ListarKeyWords()
+        {
+            try
+            {
+                List<KeyWords> keyWords = this.blogRepository.ListarKeyWords();
+                List<KeyWordDto> keyWordDto = mapper.Map<List<KeyWordDto>>(keyWords);
+                return keyWordDto;
             }
             catch (Exception)
             {

@@ -13,14 +13,14 @@
         #region Propiedades
         private readonly IUsuarioRepository usuarioRepository;
         private readonly IMapper mapper;
-        private readonly IConfiguration _configuration;
+        private readonly IConfiguration configuration;
         #endregion
         #region Constructores
         public UsuarioService(IUsuarioRepository usuarioRepository, IMapper mapper, IConfiguration configuration)
         {
             this.usuarioRepository = usuarioRepository;
             this.mapper = mapper;
-            this._configuration = configuration;
+            this.configuration = configuration;
         }
         #endregion
         #region Metodos y funciones
@@ -34,7 +34,7 @@
             try
             {
                 Usuarios crendenciales = mapper.Map<Usuarios>(usuarioDto);
-                crendenciales.Pass = Seguridad.Encrypt(crendenciales.Pass, _configuration["ApiAuth:ClaveIV"]);
+                crendenciales.Pass = Seguridad.Encrypt(crendenciales.Pass, configuration["ApiAuth:ClaveIV"]);
                 bool usuario = this.usuarioRepository.Login(crendenciales);
                 if (!usuario)
                 {
@@ -43,9 +43,9 @@
 
                 string[] login = new string[]
                 {
-                    _configuration["ApiAuth:Issuer"],
-                    _configuration["ApiAuth:Audience"],
-                    _configuration["ApiAuth:SecretKey"]
+                    configuration["ApiAuth:Issuer"],
+                    configuration["ApiAuth:Audience"],
+                    configuration["ApiAuth:SecretKey"]
                 };
                 string response = new JwtSecurityTokenHandler().WriteToken(Seguridad.GenerarToken(usuarioDto, login));
                 return response;

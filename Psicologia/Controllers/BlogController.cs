@@ -224,6 +224,31 @@
                 return StatusCode((int)System.Net.HttpStatusCode.InternalServerError, e.Message);
             }
         }
+
+        /// <summary>
+        /// Lista las palabras clave disponibles
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("key-words")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult ListarKeyWords()
+        {
+            try
+            {
+                List<KeyWordDto> entradas = this.blogService.ListarKeyWords();
+                return Json(entradas);
+            }
+            catch (NegocioExecption e)
+            {
+                return StatusCode((int)System.Net.HttpStatusCode.NotFound, e.Message);
+            }
+            catch (Exception e)
+            {
+                return StatusCode((int)System.Net.HttpStatusCode.InternalServerError, e.Message);
+            }
+        }
         #endregion
     }
 }

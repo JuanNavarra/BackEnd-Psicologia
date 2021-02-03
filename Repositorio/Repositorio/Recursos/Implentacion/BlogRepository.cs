@@ -72,6 +72,7 @@
                                                        where t7.Idblog == t0.Idblog
                                                        select new KeyWordDto
                                                        {
+                                                           Id = t2.Idkey,
                                                            Nombre = t2.Nombre
                                                        }).ToList()
                                        }).FirstOrDefault();
@@ -116,6 +117,7 @@
                                                        where t0.Idblog == t7.Idblog
                                                        select new KeyWordDto
                                                        {
+                                                           Id = t2.Idkey,
                                                            Nombre = t2.Nombre
                                                        }).ToList()
                                        }).ToList();
@@ -235,10 +237,30 @@
                                                   where t0.Estado && t1.Estado
                                                   select new CategoriasDto
                                                   {
+                                                      Id = t1.Idcategoria,
                                                       Cantidad = t0.Idblog,
                                                       Nombre = t1.Nombre
                                                   }).ToList();
                 return categorias;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Lista las palabras clave disponibles
+        /// </summary>
+        /// <returns></returns>
+        public List<KeyWords> ListarKeyWords()
+        {
+            try
+            {
+                return context.KeyWords
+                    .Where(w => w.Estado)
+                    .OrderBy(o => o.Nombre)
+                    .ToList();
             }
             catch (Exception)
             {

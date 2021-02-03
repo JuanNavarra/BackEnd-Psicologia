@@ -17,7 +17,7 @@
         #endregion
         #region Metodos y funciones
         /// <summary>
-        /// 
+        /// Genera un token que expira al finalizar el dia
         /// </summary>
         /// <param name="login"></param>
         /// <param name="apiAuth"></param>
@@ -67,15 +67,13 @@
                 });
                 encryptor.Key = pdb.GetBytes(32);
                 encryptor.IV = pdb.GetBytes(16);
-                using (MemoryStream ms = new MemoryStream())
+                using MemoryStream ms = new MemoryStream();
+                using (CryptoStream cs = new CryptoStream(ms, encryptor.CreateEncryptor(), CryptoStreamMode.Write))
                 {
-                    using (CryptoStream cs = new CryptoStream(ms, encryptor.CreateEncryptor(), CryptoStreamMode.Write))
-                    {
-                        cs.Write(clearBytes, 0, clearBytes.Length);
-                        cs.Close();
-                    }
-                    clearText = Convert.ToBase64String(ms.ToArray());
+                    cs.Write(clearBytes, 0, clearBytes.Length);
+                    cs.Close();
                 }
+                clearText = Convert.ToBase64String(ms.ToArray());
             }
             return clearText;
         }
@@ -97,15 +95,13 @@
                 });
                 encryptor.Key = pdb.GetBytes(32);
                 encryptor.IV = pdb.GetBytes(16);
-                using (MemoryStream ms = new MemoryStream())
+                using MemoryStream ms = new MemoryStream();
+                using (CryptoStream cs = new CryptoStream(ms, encryptor.CreateDecryptor(), CryptoStreamMode.Write))
                 {
-                    using (CryptoStream cs = new CryptoStream(ms, encryptor.CreateDecryptor(), CryptoStreamMode.Write))
-                    {
-                        cs.Write(cipherBytes, 0, cipherBytes.Length);
-                        cs.Close();
-                    }
-                    cipherText = Encoding.Unicode.GetString(ms.ToArray());
+                    cs.Write(cipherBytes, 0, cipherBytes.Length);
+                    cs.Close();
                 }
+                cipherText = Encoding.Unicode.GetString(ms.ToArray());
             }
             return cipherText;
         }
