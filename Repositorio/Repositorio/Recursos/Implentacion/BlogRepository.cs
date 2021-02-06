@@ -267,6 +267,91 @@
                 throw;
             }
         }
+
+        /// <summary>
+        /// guarda un post
+        /// </summary>
+        /// <param name="blog"></param>
+        public void GuardarPost(Blogs blog)
+        {
+            try
+            {
+                context.Blogs.Add(blog);
+                context.SaveChanges();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Guaerda en la m to m de blogkey
+        /// </summary>
+        /// <param name="keyWords"></param>
+        public void GuardarKeyWords(List<BlogKey> blogKeys)
+        {
+            try
+            {
+                context.BlogKey.AddRange(blogKeys);
+                context.SaveChanges();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Guarda la ruta de la imagen en la bd
+        /// </summary>
+        /// <param name="ruta"></param>
+        /// <returns></returns>
+        public void GuardarImagenPost(Imagenes imagen)
+        {
+            try
+            {
+                context.Imagenes.Add(imagen);
+                context.SaveChanges();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Busca el id de una imagen por la ruta de ella
+        /// </summary>
+        /// <param name="ruta"></param>
+        /// <returns></returns>
+        public Imagenes BuscarImagenPorRuta(string ruta)
+        {
+            try
+            {
+                return context.Imagenes.Where(w => w.Ruta == ruta).FirstOrDefault();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Lista todas las categorias
+        /// </summary>
+        /// <returns></returns>
+        public List<Categorias> ListarTodasCategorias()
+        {
+            try
+            {
+                return context.Categorias.Where(w => w.Estado).ToList();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
         #endregion
     }
 }

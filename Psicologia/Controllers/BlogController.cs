@@ -12,7 +12,6 @@
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
-    [AllowAnonymous]
     public class BlogController : Controller
     {
         #region Propiedades
@@ -31,6 +30,7 @@
         /// <param name="slug"></param>
         /// <returns></returns>
         [HttpGet("blog-entrada/{slug}")]
+        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -56,6 +56,7 @@
         /// </summary>
         /// <returns></returns>
         [HttpGet("blogs-psicologia")]
+        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -81,6 +82,7 @@
         /// </summary>
         /// <returns></returns>
         [HttpGet("ultimos-post")]
+        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -107,6 +109,7 @@
         /// <param name="slug"></param>
         /// <returns></returns>
         [HttpGet("comentarios-post/{slug}")]
+        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -133,6 +136,7 @@
         /// <param name="comentarioDto"></param>
         /// <returns></returns>
         [HttpPost("guardar-comentario")]
+        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult GuardarComentario(ComentarioSavedDto comentarioDto)
@@ -154,6 +158,7 @@
         /// <param name="busqueda"></param>
         /// <returns></returns>
         [HttpGet("buscar-post/{busqueda}")]
+        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -179,6 +184,7 @@
         /// </summary>
         /// <returns></returns>
         [HttpGet("listar-categorias")]
+        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -200,11 +206,38 @@
         }
 
         /// <summary>
+        /// Lista todas las categorias
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("listar-todas-categorias")]
+        [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult ListarTodasCategorias()
+        {
+            try
+            {
+                List<CategoriasDto> categoriasDto = this.blogService.ListarTodasCategorias();
+                return Json(categoriasDto);
+            }
+            catch (NegocioExecption e)
+            {
+                return StatusCode((int)System.Net.HttpStatusCode.NotFound, e.Message);
+            }
+            catch (Exception e)
+            {
+                return StatusCode((int)System.Net.HttpStatusCode.InternalServerError, e.Message);
+            }
+        }
+
+        /// <summary>
         /// Lista los post que tiene una categoria especifica por ordern de creacion
         /// </summary>
         /// <param name="categoria"></param>
         /// <returns></returns>
         [HttpGet("listar-detalle-categorias/{categoria}")]
+        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -230,6 +263,7 @@
         /// </summary>
         /// <returns></returns>
         [HttpGet("key-words")]
+        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -243,6 +277,65 @@
             catch (NegocioExecption e)
             {
                 return StatusCode((int)System.Net.HttpStatusCode.NotFound, e.Message);
+            }
+            catch (Exception e)
+            {
+                return StatusCode((int)System.Net.HttpStatusCode.InternalServerError, e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Metodo para guardar un post
+        /// </summary>
+        /// <param name="blogDto"></param>
+        /// <returns></returns>
+        [HttpPost("guardar-post")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status202Accepted)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult GuardarPost(BlogDetalleDto blogDto)
+        {
+            try
+            {
+                ApiCallResult result = this.blogService.GuardarPost(blogDto);
+                return Ok(new
+                {
+                    response = result,
+                });
+            }
+            catch (NegocioExecption e)
+            {
+                return StatusCode(e.Codigo, e.Message);
+            }
+            catch (Exception e)
+            {
+                return StatusCode((int)System.Net.HttpStatusCode.InternalServerError, e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Metodo para guardar un post
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("guardar-image-post")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status202Accepted)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult GuardarImagePost(IFormFile formFile)
+        {
+            try
+            {
+                formFile = Request.Form.Files[0];
+                string ruta = this.blogService.GuardarImagenServidor(formFile);
+                return StatusCode((int)System.Net.HttpStatusCode.OK, ruta);
+            }
+            catch (NegocioExecption e)
+            {
+                return StatusCode(e.Codigo, e.Message);
             }
             catch (Exception e)
             {

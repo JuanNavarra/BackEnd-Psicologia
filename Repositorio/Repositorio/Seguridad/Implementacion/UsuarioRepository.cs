@@ -38,6 +38,24 @@
                 throw;
             }
         }
+
+        /// <summary>
+        /// Metodo para combrabar si el nombre del usuario existe
+        /// </summary>
+        /// <param name="usuario"></param>
+        /// <returns></returns>
+        public Usuarios VerificarUsuario(string usuario)
+        {
+            try
+            {
+                return contexto.Usuarios
+                    .Where(w => w.Email == usuario).FirstOrDefault();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
         #endregion
     }
 }

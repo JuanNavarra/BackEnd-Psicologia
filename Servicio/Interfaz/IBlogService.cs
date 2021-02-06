@@ -1,6 +1,7 @@
 ﻿namespace Servicio
 {
     using Dtos;
+    using Microsoft.AspNetCore.Http;
     using System;
     using System.Collections.Generic;
     using System.Text;
@@ -57,5 +58,21 @@
         /// </summary>
         /// <returns></returns>
         public List<KeyWordDto> ListarKeyWords();
+        /// <summary>
+        /// Guarda un post
+        /// </summary>
+        /// <param name="blogDto"></param>
+        /// <returns></returns>
+        public ApiCallResult GuardarPost(BlogDetalleDto blogDto);
+        /// <summary>
+        /// Guarda la imagen de un blog
+        /// </summary>
+        /// <param name="formFile"></param>
+        public string GuardarImagenServidor(IFormFile formFile);
+        /// <summary>
+        /// Lista todas las categorias
+        /// </summary>
+        /// <returns></returns>
+        public List<CategoriasDto> ListarTodasCategorias();
     }
 }

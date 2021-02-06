@@ -21,6 +21,16 @@ namespace Psicologia
                 .ForMember(s => s.Id, option => option.MapFrom(o => o.Idkey));
             CreateMap<KeyWordDto, KeyWords>()
                 .ForMember(s => s.Idkey, option => option.MapFrom(o => o.Id)); ;
+            CreateMap<Blogs, BlogDetalleDto>();
+            CreateMap<BlogDetalleDto, Blogs>();
+            CreateMap<BlogKey, BlogKeyWordsDto>();
+            CreateMap<BlogKeyWordsDto, BlogKey>();
+            CreateMap<Imagenes, ImagenesDto>();
+            CreateMap<ImagenesDto, Imagenes>();
+            CreateMap<Categorias, CategoriasDto>()
+                .ForMember(s => s.Id, option => option.MapFrom(o => o.Idcategoria));
+            CreateMap<CategoriasDto, Categorias>()
+                .ForMember(s => s.Idcategoria, option => option.MapFrom(o => o.Id));;
         }
         #endregion
     }

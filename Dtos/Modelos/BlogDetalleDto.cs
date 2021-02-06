@@ -1,5 +1,6 @@
 ﻿namespace Dtos
 {
+    using Microsoft.AspNetCore.Http;
     using Modelos;
     using System;
     using System.Collections.Generic;
@@ -20,5 +21,9 @@
         public int IdBlog { get; set; }
         public string Cita { get; set; }
         public string AutorCita { get; set; }
+        public bool Estado { get; set; }
+        public int Idcategoria { get; set; }
+        public int Idcreador { get; set; }
+        public int Idimagen { get; set; }
     }
 }

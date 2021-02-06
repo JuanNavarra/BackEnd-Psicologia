@@ -59,6 +59,25 @@
                 throw;
             }
         }
+
+        /// <summary>
+        /// Metodo para combrabar si el nombre del usuario existe
+        /// </summary>
+        /// <param name="usuario"></param>
+        /// <returns></returns>
+        public UsuarioDto VerificarUsuario(string usuario)
+        {
+            try
+            {
+                Usuarios input = this.usuarioRepository.VerificarUsuario(usuario);
+                UsuarioDto usuarioDto = mapper.Map<UsuarioDto>(input);
+                return usuarioDto;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
         #endregion
     }
 }

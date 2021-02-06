@@ -55,5 +55,32 @@
         /// </summary>
         /// <returns></returns>
         public List<KeyWords> ListarKeyWords();
+        /// <summary>
+        /// guarda un post
+        /// </summary>
+        /// <param name="blog"></param>
+        public void GuardarPost(Blogs blog);
+        /// <summary>
+        /// Guaerda en la m to m de blogkey
+        /// </summary>
+        /// <param name="keyWords"></param>
+        public void GuardarKeyWords(List<BlogKey> blogKeys);
+        /// <summary>
+        /// Guarda la ruta de la imagen en la bd
+        /// </summary>
+        /// <param name="ruta"></param>
+        /// <returns></returns>
+        public void GuardarImagenPost(Imagenes imagen);
+        /// <summary>
+        /// Busca el id de una imagen por la ruta de ella
+        /// </summary>
+        /// <param name="ruta"></param>
+        /// <returns></returns>
+        public Imagenes BuscarImagenPorRuta(string ruta);
+        /// <summary>
+        /// Lista todas las categorias
+        /// </summary>
+        /// <returns></returns>
+        public List<Categorias> ListarTodasCategorias();
     }
 }

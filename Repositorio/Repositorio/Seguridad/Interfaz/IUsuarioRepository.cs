@@ -13,5 +13,11 @@
         /// <param name="usuario"></param>
         /// <returns></returns>
         public bool Login(Usuarios usuario);
+        /// <summary>
+        /// Metodo para combrabar si el nombre del usuario existe
+        /// </summary>
+        /// <param name="usuario"></param>
+        /// <returns></returns>
+        public Usuarios VerificarUsuario(string usuario);
     }
 }

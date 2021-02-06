@@ -13,7 +13,7 @@
     {
 
         #region Propiedades
-
+        private const string Usuario = "User";
         #endregion
         #region Metodos y funciones
         /// <summary>
@@ -35,7 +35,7 @@
 
             Claim[] claims = new[]
             {
-                new Claim(ClaimTypes.Email, login.Email)
+                new Claim(Usuario, login.Email)
             };
 
             return new JwtSecurityToken
