@@ -58,11 +58,11 @@
         /// Listado de todos los entradas disponibles ordenadas de fecha mas reciente
         /// </summary>
         /// <returns></returns>
-        public List<BlogDto> MostrarListadoEntradas()
+        public List<BlogDto> MostrarListadoEntradas(string entrada)
         {
             try
             {
-                List<BlogDto> blogs = this.blogRepository.MostrarListadoEntradas();
+                List<BlogDto> blogs = this.blogRepository.MostrarListadoEntradas(entrada);
                 return blogs;
             }
             catch (Exception)
@@ -227,7 +227,7 @@
         {
             try
             {
-                List<BlogDto> blogs = this.blogRepository.MostrarListadoEntradas()
+                List<BlogDto> blogs = this.blogRepository.MostrarListadoEntradas("")
                     .Where(w => w.Categoria.ToLower() == categoria.ToLower())
                     .OrderByDescending(o => o.FechaCreacion)
                     .ToList();
@@ -261,7 +261,7 @@
         /// Guaerda en la m to m de blogkey
         /// </summary>
         /// <param name="blogKeys"></param>
-        private void GuardarKeyWords(List<KeyWordDto> keyDto, Blogs blogs)
+        public void GuardarKeyWords(List<KeyWordDto> keyDto, Blogs blogs)
         {
             try
             {
@@ -329,6 +329,7 @@
                 blogDto.Idcreador = usuario.Idusuario;
                 blogDto.Idimagen = this.BuscarImagenPorRuta(blogDto.ImagenPost);
                 blogDto.FechaCreacion = DateTime.Now;
+                blogDto.Tipo = "PO";
                 blogDto.Estado = true;
                 Blogs blog = mapper.Map<Blogs>(blogDto);
                 this.blogRepository.GuardarPost(blog);

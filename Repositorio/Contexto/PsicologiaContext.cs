@@ -64,6 +64,11 @@
                     .IsRequired()
                     .HasColumnName("descripcion");
 
+                entity.Property(e => e.Tipo)
+                    .IsRequired()
+                    .HasMaxLength(2)
+                    .HasColumnName("tipo");
+
                 entity.Property(e => e.Estado).HasColumnName("estado");
 
                 entity.Property(e => e.Fechaactualizacion)
@@ -81,7 +86,7 @@
                 entity.Property(e => e.Idimagen).HasColumnName("idimagen");
 
                 entity.Property(e => e.Subtitulo)
-                    .IsRequired()
+                    .IsRequired(false)
                     .HasColumnName("subtitulo");
 
                 entity.Property(e => e.Titulo)

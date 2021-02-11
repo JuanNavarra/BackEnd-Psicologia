@@ -59,11 +59,13 @@
                                            Creador = t4.Nombre + " " + t4.Apellido,
                                            Descripcion = t0.Descripcion,
                                            FechaCreacion = t0.Fechacreacion,
+                                           IdVideo = t6.Nombre,
                                            ImagenCreador = t5.Ruta,
                                            ImagenPost = t6.Ruta,
                                            IdBlog = t0.Idblog,
                                            Titulo = t0.Titulo,
                                            Slug = t0.Slug,
+                                           Tipo = t0.Tipo,
                                            Cita = t0.Cita,
                                            AutorCita = t0.Autorcita,
                                            KeyWords = (from t7 in context.Blogs
@@ -89,7 +91,7 @@
         /// Listado de todos los entradas disponibles ordenadas de fecha mas reciente
         /// </summary>
         /// <returns></returns>
-        public List<BlogDto> MostrarListadoEntradas()
+        public List<BlogDto> MostrarListadoEntradas(string entrada)
         {
             try
             {
@@ -98,7 +100,7 @@
                                        join t3 in context.Categorias on t0.Idcategoria equals t3.Idcategoria
                                        join t4 in context.Usuarios on t0.Idcreador equals t4.Idusuario
                                        join t5 in context.Imagenes on t4.Idimagen equals t5.Idimagen
-                                       where t0.Estado
+                                       where t0.Estado && entrada == "" ? t0.Tipo != "" : t0.Tipo.Equals(entrada)
                                        select new BlogDto
                                        {
                                            SubTitulo = t0.Subtitulo,
@@ -109,6 +111,7 @@
                                            ImagenCreador = t5.Ruta,
                                            ImagenPost = t6.Ruta,
                                            IdBlog = t0.Idblog,
+                                           NombreImagen = t6.Nombre,
                                            Titulo = t0.Titulo,
                                            Slug = t0.Slug,
                                            KeyWords = (from t7 in context.Blogs
@@ -135,17 +138,26 @@
         /// <returns></returns>
         public List<PostRecienteDto> ListarRecientes()
         {
-            List<PostRecienteDto> posts = (from t0 in context.Blogs
-                                           join t1 in context.Imagenes on t0.Idimagen equals t1.Idimagen
-                                           where t0.Estado
-                                           select new PostRecienteDto
-                                           {
-                                               FechaCreacion = t0.Fechacreacion,
-                                               Slug = t0.Slug,
-                                               Imagen = t1.Ruta,
-                                               Titulo = t0.Titulo,
-                                           }).Take(5).ToList();
-            return posts.OrderByDescending(o => o.FechaCreacion).ToList(); ;
+            try
+            {
+                List<PostRecienteDto> posts = (from t0 in context.Blogs
+                                               join t1 in context.Imagenes on t0.Idimagen equals t1.Idimagen
+                                               where t0.Estado
+                                               select new PostRecienteDto
+                                               {
+                                                   FechaCreacion = t0.Fechacreacion,
+                                                   Slug = t0.Slug,
+                                                   Imagen = t1.Ruta,
+                                                   Titulo = t0.Titulo,
+                                                   Tipo = t0.Tipo,
+                                               }).Take(5).ToList();
+                return posts.OrderByDescending(o => o.FechaCreacion).ToList(); ;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         /// <summary>
@@ -279,7 +291,7 @@
                 context.Blogs.Add(blog);
                 context.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }

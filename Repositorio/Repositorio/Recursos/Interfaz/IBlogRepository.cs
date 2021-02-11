@@ -10,7 +10,7 @@
         /// Listado de todos los entradas disponibles ordenadas de fecha mas reciente
         /// </summary>
         /// <returns></returns>
-        public List<BlogDto> MostrarListadoEntradas();
+        public List<BlogDto> MostrarListadoEntradas(string entrada);
         /// <summary>
         /// Obtiene una unica entrada dado un slug
         /// </summary>

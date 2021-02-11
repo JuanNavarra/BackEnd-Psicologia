@@ -2,6 +2,7 @@
 {
     using Dtos;
     using Microsoft.AspNetCore.Http;
+    using Modelos;
     using System;
     using System.Collections.Generic;
     using System.Text;
@@ -12,7 +13,7 @@
         /// Listado de todos los entradas disponibles ordenadas de fecha mas reciente
         /// </summary>
         /// <returns></returns>
-        public List<BlogDto> MostrarListadoEntradas();
+        public List<BlogDto> MostrarListadoEntradas(string entrada);
         /// <summary>
         /// Obtiene una unica entrada dado un slug
         /// </summary>
@@ -74,5 +75,10 @@
         /// </summary>
         /// <returns></returns>
         public List<CategoriasDto> ListarTodasCategorias();
+        /// <summary>
+        /// Guaerda en la m to m de blogkey
+        /// </summary>
+        /// <param name="blogKeys"></param>
+        public void GuardarKeyWords(List<KeyWordDto> keyDto, Blogs blogs);
     }
 }

@@ -9,6 +9,7 @@
         public string Slug { get; set; }
         public string Titulo { get; set; }
         public string Imagen { get; set; }
+        public string Tipo { get; set; }
         public DateTime FechaCreacion { get; set; }
     }
 }

@@ -34,7 +34,7 @@
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult MostrarListadoEntradas(string slug)
+        public IActionResult MostrarListadoEntradasPorSlug(string slug)
         {
             try
             {
@@ -54,6 +54,7 @@
         /// <summary>
         /// Listado de todos los entradas disponibles ordenadas de fecha mas reciente
         /// </summary>
+        /// <param name="entrada"></param>
         /// <returns></returns>
         [HttpGet("blogs-psicologia")]
         [AllowAnonymous]
@@ -64,7 +65,7 @@
         {
             try
             {
-                List<BlogDto> blogs = this.blogService.MostrarListadoEntradas();
+                List<BlogDto> blogs = this.blogService.MostrarListadoEntradas("PO");
                 return Json(blogs);
             }
             catch (NegocioExecption e)
