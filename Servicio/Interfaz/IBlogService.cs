@@ -12,14 +12,17 @@
         /// <summary>
         /// Listado de todos los entradas disponibles ordenadas de fecha mas reciente
         /// </summary>
+        /// <param name="entrada"></param>
+        /// <param name="estado"></param>
         /// <returns></returns>
-        public List<BlogDto> MostrarListadoEntradas(string entrada);
+        public List<BlogDto> MostrarListadoEntradas(string entrada, bool estado);
         /// <summary>
         /// Obtiene una unica entrada dado un slug
         /// </summary>
         /// <param name="slug"></param>
+        /// <param name="estado"></param>
         /// <returns></returns>
-        public BlogDetalleDto MostrarEntradaPorSlug(string slug);
+        public BlogDetalleDto MostrarEntradaPorSlug(string slug, bool estado);
         /// <summary>
         /// Lista los 5 post mas recientes
         /// </summary>
@@ -52,8 +55,9 @@
         /// Lista los post que tiene una categoria especifica por ordern de creacion
         /// </summary>
         /// <param name="categoria"></param>
+        /// <param name="estado"></param>
         /// <returns></returns>
-        public List<BlogDto> ListarPostCategoria(string categoria);
+        public List<BlogDto> ListarPostCategoria(string categoria, bool estado);
         /// <summary>
         /// Lista las palabras clave disponibles
         /// </summary>

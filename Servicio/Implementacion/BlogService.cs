@@ -33,15 +33,16 @@
         /// Obtiene una unica entrada dado un slug
         /// </summary>
         /// <param name="slug"></param>
+        /// <param name="estado"></param>
         /// <returns></returns>
-        public BlogDetalleDto MostrarEntradaPorSlug(string slug)
+        public BlogDetalleDto MostrarEntradaPorSlug(string slug, bool estado)
         {
             try
             {
                 Blogs blog = this.blogRepository.ObtenerSlug(slug);
                 if (blog is null)
                     throw new NegocioExecption("No existe el slug", 404);
-                BlogDetalleDto blogDto = this.blogRepository.MostrarEntradaPorSlug(slug);
+                BlogDetalleDto blogDto = this.blogRepository.MostrarEntradaPorSlug(slug, estado);
                 return blogDto;
             }
             catch (NegocioExecption)
@@ -54,15 +55,18 @@
             }
         }
 
+
         /// <summary>
         /// Listado de todos los entradas disponibles ordenadas de fecha mas reciente
         /// </summary>
+        /// <param name="entrada"></param>
+        /// <param name="estado"></param>
         /// <returns></returns>
-        public List<BlogDto> MostrarListadoEntradas(string entrada)
+        public List<BlogDto> MostrarListadoEntradas(string entrada, bool estado)
         {
             try
             {
-                List<BlogDto> blogs = this.blogRepository.MostrarListadoEntradas(entrada);
+                List<BlogDto> blogs = this.blogRepository.MostrarListadoEntradas(entrada, estado);
                 return blogs;
             }
             catch (Exception)
@@ -187,30 +191,31 @@
             try
             {
                 List<CategoriasDto> categorias = this.blogRepository.ListarCategorias();
-                if (categorias.Count <= 0)
-                    throw new Exception("No hay categorias");
-
-                List<CategoriasDto> categoriasDtos = new List<CategoriasDto>();
-                foreach (var line in categorias.GroupBy(info => info.Nombre)
-                    .Select(group => new CategoriasDto
-                    {
-                        Nombre = group.Key,
-                        Id = group.Select(s => s.Id).FirstOrDefault(),
-                        Cantidad = group.Count()
-                    }).OrderBy(x => x.Cantidad))
+                if (categorias.Count > 0)
                 {
-                    if (line.Cantidad > 0)
-                    {
-                        CategoriasDto categoriasDto = new CategoriasDto
+                    List<CategoriasDto> categoriasDtos = new List<CategoriasDto>();
+                    foreach (var line in categorias.GroupBy(info => info.Nombre)
+                        .Select(group => new CategoriasDto
                         {
-                            Cantidad = line.Cantidad,
-                            Nombre = line.Nombre,
-                            Id = line.Id
-                        };
-                        categoriasDtos.Add(categoriasDto);
+                            Nombre = group.Key,
+                            Id = group.Select(s => s.Id).FirstOrDefault(),
+                            Cantidad = group.Count()
+                        }).OrderBy(x => x.Cantidad))
+                    {
+                        if (line.Cantidad > 0)
+                        {
+                            CategoriasDto categoriasDto = new CategoriasDto
+                            {
+                                Cantidad = line.Cantidad,
+                                Nombre = line.Nombre,
+                                Id = line.Id
+                            };
+                            categoriasDtos.Add(categoriasDto);
+                        }
                     }
+                    return categoriasDtos.OrderByDescending(o => o.Cantidad).ToList();
                 }
-                return categoriasDtos.OrderByDescending(o => o.Cantidad).ToList();
+                return null;
             }
             catch (Exception)
             {
@@ -222,12 +227,13 @@
         /// Lista los post que tiene una categoria especifica por ordern de creacion
         /// </summary>
         /// <param name="categoria"></param>
+        /// <param name="estado"></param>
         /// <returns></returns>
-        public List<BlogDto> ListarPostCategoria(string categoria)
+        public List<BlogDto> ListarPostCategoria(string categoria, bool estado)
         {
             try
             {
-                List<BlogDto> blogs = this.blogRepository.MostrarListadoEntradas("")
+                List<BlogDto> blogs = this.blogRepository.MostrarListadoEntradas("", estado)
                     .Where(w => w.Categoria.ToLower() == categoria.ToLower())
                     .OrderByDescending(o => o.FechaCreacion)
                     .ToList();
@@ -369,7 +375,7 @@
                 var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
                 if (formFile.Length > 0)
                 {
-                    string fileName = DateTime.Now.Millisecond.ToString() + 
+                    string fileName = DateTime.Now.Millisecond.ToString() +
                         ContentDispositionHeaderValue.Parse(formFile.ContentDisposition).FileName.Trim('"');
                     string fullPath = Path.Combine(pathToSave, fileName);
                     ruta = Path.Combine(folderName, fileName);

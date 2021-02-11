@@ -29,16 +29,16 @@
         /// </summary>
         /// <param name="slug"></param>
         /// <returns></returns>
-        [HttpGet("blog-entrada/{slug}")]
+        [HttpGet("blog-entrada/{slug}/{estado}")]
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult MostrarListadoEntradasPorSlug(string slug)
+        public IActionResult MostrarListadoEntradasPorSlug(string slug, bool estado)
         {
             try
             {
-                BlogDetalleDto blogs = this.blogService.MostrarEntradaPorSlug(slug);
+                BlogDetalleDto blogs = this.blogService.MostrarEntradaPorSlug(slug, estado);
                 return Json(blogs);
             }
             catch (NegocioExecption e)
@@ -54,18 +54,18 @@
         /// <summary>
         /// Listado de todos los entradas disponibles ordenadas de fecha mas reciente
         /// </summary>
-        /// <param name="entrada"></param>
+        /// <param name="estado"></param>
         /// <returns></returns>
-        [HttpGet("blogs-psicologia")]
+        [HttpGet("blogs-psicologia/{estado}")]
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult MostrarListadoEntradas()
+        public IActionResult MostrarListadoEntradas(bool estado)
         {
             try
             {
-                List<BlogDto> blogs = this.blogService.MostrarListadoEntradas("PO");
+                List<BlogDto> blogs = this.blogService.MostrarListadoEntradas("PO", estado);
                 return Json(blogs);
             }
             catch (NegocioExecption e)
@@ -109,7 +109,7 @@
         /// </summary>
         /// <param name="slug"></param>
         /// <returns></returns>
-        [HttpGet("comentarios-post/{slug}")]
+        [HttpGet("comentarios-mostrar/{slug}")]
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -236,17 +236,18 @@
         /// Lista los post que tiene una categoria especifica por ordern de creacion
         /// </summary>
         /// <param name="categoria"></param>
+        /// <param name="estado"></param>
         /// <returns></returns>
         [HttpGet("listar-detalle-categorias/{categoria}")]
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult ListarCategorias(string categoria)
+        public IActionResult ListarPostCategoria(string categoria, bool estado)
         {
             try
             {
-                List<BlogDto> entradas = this.blogService.ListarPostCategoria(categoria);
+                List<BlogDto> entradas = this.blogService.ListarPostCategoria(categoria, estado);
                 return Json(entradas);
             }
             catch (NegocioExecption e)

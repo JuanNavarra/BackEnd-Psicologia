@@ -9,14 +9,17 @@
         /// <summary>
         /// Listado de todos los entradas disponibles ordenadas de fecha mas reciente
         /// </summary>
+        /// <param name="entrada"></param>
+        /// <param name="estado"></param>
         /// <returns></returns>
-        public List<BlogDto> MostrarListadoEntradas(string entrada);
+        public List<BlogDto> MostrarListadoEntradas(string entrada, bool estado);
         /// <summary>
         /// Obtiene una unica entrada dado un slug
         /// </summary>
         /// <param name="slug"></param>
+        /// <param name="estado"></param>
         /// <returns></returns>
-        public BlogDetalleDto MostrarEntradaPorSlug(string slug);
+        public BlogDetalleDto MostrarEntradaPorSlug(string slug, bool estado);
         /// <summary>
         /// Verifica si el slug existe
         /// </summary>

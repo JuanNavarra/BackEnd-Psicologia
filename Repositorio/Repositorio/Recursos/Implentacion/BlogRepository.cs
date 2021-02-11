@@ -37,12 +37,14 @@
             }
         }
 
+
         /// <summary>
         /// Obtiene una unica entrada dado un slug
         /// </summary>
         /// <param name="slug"></param>
+        /// <param name="estado"></param>
         /// <returns></returns>
-        public BlogDetalleDto MostrarEntradaPorSlug(string slug)
+        public BlogDetalleDto MostrarEntradaPorSlug(string slug, bool estado)
         {
             try
             {
@@ -51,7 +53,7 @@
                                        join t3 in context.Categorias on t0.Idcategoria equals t3.Idcategoria
                                        join t4 in context.Usuarios on t0.Idcreador equals t4.Idusuario
                                        join t5 in context.Imagenes on t4.Idimagen equals t5.Idimagen
-                                       where t0.Estado && t0.Slug == slug
+                                       where t0.Estado == (estado != true || estado)  && t0.Slug == slug
                                        select new BlogDetalleDto
                                        {
                                            SubTitulo = t0.Subtitulo,
@@ -90,8 +92,10 @@
         /// <summary>
         /// Listado de todos los entradas disponibles ordenadas de fecha mas reciente
         /// </summary>
+        /// <param name="entrada"></param>
+        /// <param name="estado"></param>
         /// <returns></returns>
-        public List<BlogDto> MostrarListadoEntradas(string entrada)
+        public List<BlogDto> MostrarListadoEntradas(string entrada, bool estado)
         {
             try
             {
@@ -100,7 +104,8 @@
                                        join t3 in context.Categorias on t0.Idcategoria equals t3.Idcategoria
                                        join t4 in context.Usuarios on t0.Idcreador equals t4.Idusuario
                                        join t5 in context.Imagenes on t4.Idimagen equals t5.Idimagen
-                                       where t0.Estado && entrada == "" ? t0.Tipo != "" : t0.Tipo.Equals(entrada)
+                                       where t0.Estado == (estado != true || estado) 
+                                       && entrada == "" ? t0.Tipo != "" : t0.Tipo.Equals(entrada)
                                        select new BlogDto
                                        {
                                            SubTitulo = t0.Subtitulo,

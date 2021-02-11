@@ -31,12 +31,13 @@
         /// Listado de todos los entradas de youtube disponibles ordenadas de fecha mas reciente
         /// </summary>
         /// <param name="entrada"></param>
+        /// <param name="estado"></param>
         /// <returns></returns>
-        public List<YoutubeDto> MostrarListadoEntradas(string entrada)
+        public List<YoutubeDto> MostrarListadoEntradas(string entrada, bool estado)
         {
             try
             {
-                List<BlogDto> blogDto = this.blogService.MostrarListadoEntradas(entrada);
+                List<BlogDto> blogDto = this.blogService.MostrarListadoEntradas(entrada,estado);
                 List<YoutubeDto> youtubeDto = mapper.Map<List<YoutubeDto>>(blogDto);
                 return youtubeDto;
             }

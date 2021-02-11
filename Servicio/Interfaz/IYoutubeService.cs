@@ -11,8 +11,9 @@
         /// Listado de todos los entradas de youtube disponibles ordenadas de fecha mas reciente
         /// </summary>
         /// <param name="entrada"></param>
+        /// <param name="estado"></param>
         /// <returns></returns>
-        public List<YoutubeDto> MostrarListadoEntradas(string entrada);
+        public List<YoutubeDto> MostrarListadoEntradas(string entrada, bool estado);
         /// <summary>
         /// Guarda las entradas con videos de youtube
         /// </summary>

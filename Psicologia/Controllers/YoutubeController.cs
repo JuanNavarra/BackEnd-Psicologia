@@ -30,17 +30,18 @@
         /// Listado de todos los entradas de youtube disponibles ordenadas de fecha mas reciente
         /// </summary>
         /// <param name="entrada"></param>
+        /// <param name="estado"></param>
         /// <returns></returns>
-        [HttpGet("youtube-psicologia")]
+        [HttpGet("youtube-psicologia/{estado}")]
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult MostrarListadoEntradas()
+        public IActionResult MostrarListadoEntradas(bool estado)
         {
             try
             {
-                List<YoutubeDto> blogs = this.service.MostrarListadoEntradas("YO");
+                List<YoutubeDto> blogs = this.service.MostrarListadoEntradas("YO", estado);
                 return Json(blogs);
             }
             catch (NegocioExecption e)
@@ -59,7 +60,7 @@
         /// <param name="youtubeDto"></param>
         /// <returns></returns>
         [HttpPost("guardar-entrada-youtube")]
-        [AllowAnonymous]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
