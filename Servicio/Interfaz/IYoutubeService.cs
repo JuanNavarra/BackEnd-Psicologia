@@ -20,5 +20,29 @@
         /// <param name="youtubeDto"></param>
         /// <returns></returns>
         public ApiCallResult GuardarEntradaYoutube(EntradaYoutubeDto youtubeDto);
+        /// <summary>
+        /// Elimina una entrada de youtube por el slug
+        /// </summary>
+        /// <param name="slug"></param>
+        public ApiCallResult EliminarEntradaYoutube(string slug);
+        /// <summary>
+        /// Inhabilita o habilita una entrada de entrada
+        /// </summary>
+        /// <param name="slug"></param>
+        /// <returns></returns>
+        public ApiCallResult CambiarEstadoEntrada(string slug);
+        /// <summary>
+        /// Muestra el video detalle del video de youtube
+        /// </summary>
+        /// <param name="slug"></param>
+        /// <param name="estado"></param>
+        /// <returns></returns>
+        public YoutubeDto MostrarVideoYoutubePorSlug(string slug, bool estado);
+        /// <summary>
+        /// Actualiza la entrada de un video de youtube
+        /// </summary>
+        /// <param name="youtubeDto"></param>
+        /// <returns></returns>
+        public ApiCallResult ActualizarEntradaYoutube(YoutubeDto youtubeDto);
     }
 }

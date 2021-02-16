@@ -85,5 +85,43 @@
         /// </summary>
         /// <returns></returns>
         public List<Categorias> ListarTodasCategorias();
+        /// <summary>
+        /// Lista toda la tabla mtm de blog y key
+        /// </summary>
+        /// <param name="idBlog"></param>
+        /// <returns></returns>
+        public List<BlogKey> ListarBlogKeys(int idBlog);
+        /// <summary>
+        /// Elimina la relacion mtm de blog y keywords
+        /// </summary>
+        /// <param name="blogKeys"></param>
+        public void ElimniarBlogKeys(List<BlogKey> blogKeys);
+        /// <summary>
+        /// Elimina el contenido multimedia de una entrada
+        /// </summary>
+        /// <param name="media"></param>
+        public void EliminarMultiMediaEntrada(Imagenes media);
+        /// <summary>
+        /// Busca el contenido multimedia la tabla imagenes
+        /// </summary>
+        /// <param name="idMedia"></param>
+        /// <returns></returns>
+        public Imagenes BuscarMultimedia(int? idMedia);
+        /// <summary>
+        /// Elimina una entrada
+        /// </summary>
+        /// <param name="blog"></param>
+        public void EliminarEntrada(Blogs blog);
+        /// <summary>
+        /// Actualiza la tabla de blogs
+        /// </summary>
+        /// <param name="blog"></param>
+        /// <returns></returns>
+        public void ActualizarEntrada(Blogs blog);
+        /// <summary>
+        /// Actualiza la tabla imagenes
+        /// </summary>
+        /// <param name="multimedia"></param>
+        public void ActualizarMultimedia(Imagenes multimedia);
     }
 }

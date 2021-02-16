@@ -22,10 +22,11 @@
         public string Cita { get; set; }
         public string AutorCita { get; set; }
         public bool Estado { get; set; }
-        public int Idcategoria { get; set; }
+        public int? Idcategoria { get; set; }
         public int Idcreador { get; set; }
         public int Idimagen { get; set; }
         public string Tipo { get; set; }
         public string IdVideo { get; set; }
+        public string NombreImagen { get; set; }
     }
 }

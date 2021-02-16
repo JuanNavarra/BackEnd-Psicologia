@@ -267,7 +267,7 @@
         /// Guaerda en la m to m de blogkey
         /// </summary>
         /// <param name="blogKeys"></param>
-        public void GuardarKeyWords(List<KeyWordDto> keyDto, Blogs blogs)
+        public void GuardarKeyWords(List<KeyWordDto> keyDto, int blogs)
         {
             try
             {
@@ -277,7 +277,7 @@
                 {
                     BlogKeyWordsDto keyWord = new BlogKeyWordsDto()
                     {
-                        IdBlog = blogs.Idblog,
+                        IdBlog = blogs,
                         IdKey = item
                     };
                     keyWordsDto.Add(keyWord);
@@ -343,7 +343,7 @@
 
                 #region Guardar keywords
                 Blogs blogCreado = this.blogRepository.ObtenerSlug(blogDto.Slug);
-                this.GuardarKeyWords(blogDto.KeyWords, blogCreado);
+                this.GuardarKeyWords(blogDto.KeyWords, blogCreado.Idblog);
                 #endregion
 
                 return new ApiCallResult
@@ -434,6 +434,7 @@
                 throw;
             }
         }
+
         #endregion
     }
 }

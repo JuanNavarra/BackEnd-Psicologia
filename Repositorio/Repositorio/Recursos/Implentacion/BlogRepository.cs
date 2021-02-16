@@ -28,7 +28,7 @@
         {
             try
             {
-                Blogs blog = this.context.Blogs.Where(w => w.Estado && w.Slug == slug).FirstOrDefault();
+                Blogs blog = this.context.Blogs.Where(w => w.Slug == slug).FirstOrDefault();
                 return blog;
             }
             catch (Exception)
@@ -36,7 +36,6 @@
                 throw;
             }
         }
-
 
         /// <summary>
         /// Obtiene una unica entrada dado un slug
@@ -53,7 +52,7 @@
                                        join t3 in context.Categorias on t0.Idcategoria equals t3.Idcategoria
                                        join t4 in context.Usuarios on t0.Idcreador equals t4.Idusuario
                                        join t5 in context.Imagenes on t4.Idimagen equals t5.Idimagen
-                                       where t0.Estado == (estado != true || estado)  && t0.Slug == slug
+                                       where (estado ? t0.Estado : null == null) && t0.Slug == slug
                                        select new BlogDetalleDto
                                        {
                                            SubTitulo = t0.Subtitulo,
@@ -64,11 +63,14 @@
                                            IdVideo = t6.Nombre,
                                            ImagenCreador = t5.Ruta,
                                            ImagenPost = t6.Ruta,
+                                           NombreImagen = t6.Nombre,
                                            IdBlog = t0.Idblog,
+                                           Estado = t0.Estado,
                                            Titulo = t0.Titulo,
                                            Slug = t0.Slug,
                                            Tipo = t0.Tipo,
                                            Cita = t0.Cita,
+                                           Idcategoria = t0.Idcategoria,
                                            AutorCita = t0.Autorcita,
                                            KeyWords = (from t7 in context.Blogs
                                                        join t1 in context.BlogKey on t0.Idblog equals t1.Idblog
@@ -104,8 +106,8 @@
                                        join t3 in context.Categorias on t0.Idcategoria equals t3.Idcategoria
                                        join t4 in context.Usuarios on t0.Idcreador equals t4.Idusuario
                                        join t5 in context.Imagenes on t4.Idimagen equals t5.Idimagen
-                                       where t0.Estado == (estado != true || estado) 
-                                       && entrada == "" ? t0.Tipo != "" : t0.Tipo.Equals(entrada)
+                                       where (estado ? t0.Estado : null == null)
+                                       && (entrada == "" ? null == null : t0.Tipo.Equals(entrada))
                                        select new BlogDto
                                        {
                                            SubTitulo = t0.Subtitulo,
@@ -116,6 +118,7 @@
                                            ImagenCreador = t5.Ruta,
                                            ImagenPost = t6.Ruta,
                                            IdBlog = t0.Idblog,
+                                           Estado = t0.Estado,
                                            NombreImagen = t6.Nombre,
                                            Titulo = t0.Titulo,
                                            Slug = t0.Slug,
@@ -363,6 +366,129 @@
             try
             {
                 return context.Categorias.Where(w => w.Estado).ToList();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Lista toda la tabla mtm de blog y key
+        /// </summary>
+        /// <param name="idBlog"></param>
+        /// <returns></returns>
+        public List<BlogKey> ListarBlogKeys(int idBlog)
+        {
+            try
+            {
+                return context.BlogKey.Where(w => w.Idblog == idBlog).ToList();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Elimina la relacion mtm de blog y keywords
+        /// </summary>
+        /// <param name="blogKeys"></param>
+        public void ElimniarBlogKeys(List<BlogKey> blogKeys)
+        {
+            try
+            {
+                context.BlogKey.RemoveRange(blogKeys);
+                context.SaveChanges();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Elimina el contenido multimedia de una entrada
+        /// </summary>
+        /// <param name="media"></param>
+        public void EliminarMultiMediaEntrada(Imagenes media)
+        {
+            try
+            {
+                context.Imagenes.Remove(media);
+                context.SaveChanges();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Busca el contenido multimedia la tabla imagenes
+        /// </summary>
+        /// <param name="idMedia"></param>
+        /// <returns></returns>
+        public Imagenes BuscarMultimedia(int? idMedia)
+        {
+            try
+            {
+                return context.Imagenes
+                    .Where(w => w.Idimagen == idMedia)
+                    .FirstOrDefault();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Elimina una entrada
+        /// </summary>
+        /// <param name="blog"></param>
+        public void EliminarEntrada(Blogs blog)
+        {
+            try
+            {
+                context.Blogs.Remove(blog);
+                context.SaveChanges();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Actualiza la tabla de blogs
+        /// </summary>
+        /// <param name="blog"></param>
+        /// <returns></returns>
+        public void ActualizarEntrada(Blogs blog)
+        {
+            try
+            {
+                context.Blogs.Update(blog);
+                context.SaveChanges();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Actualiza la tabla imagenes
+        /// </summary>
+        /// <param name="multimedia"></param>
+        public void ActualizarMultimedia(Imagenes multimedia)
+        {
+            try
+            {
+                context.Imagenes.Update(multimedia);
+                context.SaveChanges();
             }
             catch (Exception)
             {

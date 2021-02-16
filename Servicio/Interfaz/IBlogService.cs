@@ -83,6 +83,6 @@
         /// Guaerda en la m to m de blogkey
         /// </summary>
         /// <param name="blogKeys"></param>
-        public void GuardarKeyWords(List<KeyWordDto> keyDto, Blogs blogs);
+        public void GuardarKeyWords(List<KeyWordDto> keyDto, int blogs);
     }
 }

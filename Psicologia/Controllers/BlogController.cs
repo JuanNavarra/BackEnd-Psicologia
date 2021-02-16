@@ -16,11 +16,13 @@
     {
         #region Propiedades
         private readonly IBlogService blogService;
+        private readonly IYoutubeService youtubeService;
         #endregion
         #region Constructores
-        public BlogController(IBlogService blogService)
+        public BlogController(IBlogService blogService, IYoutubeService youtubeService)
         {
             this.blogService = blogService;
+            this.youtubeService = youtubeService;
         }
         #endregion
         #region Metodos y funciones
@@ -238,7 +240,7 @@
         /// <param name="categoria"></param>
         /// <param name="estado"></param>
         /// <returns></returns>
-        [HttpGet("listar-detalle-categorias/{categoria}")]
+        [HttpGet("listar-detalle-categorias/{categoria}/{estado}")]
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -338,6 +340,34 @@
             catch (NegocioExecption e)
             {
                 return StatusCode(e.Codigo, e.Message);
+            }
+            catch (Exception e)
+            {
+                return StatusCode((int)System.Net.HttpStatusCode.InternalServerError, e.Message);
+            }
+        }
+
+
+        /// <summary>
+        /// Habilita o inhabilita una entrada de un post por el slug
+        /// </summary>
+        /// <param name="slug"></param>
+        /// <returns></returns>
+        [HttpPut("cambiar-estado-entrada-post/{slug}")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult CambiarEstadoEntradaYoutube(string slug)
+        {
+            try
+            {
+                ApiCallResult result = this.youtubeService.CambiarEstadoEntrada(slug);
+                return StatusCode((int)System.Net.HttpStatusCode.OK, result);
+            }
+            catch (NegocioExecption e)
+            {
+                return StatusCode((int)System.Net.HttpStatusCode.NotFound, e.Message);
             }
             catch (Exception e)
             {

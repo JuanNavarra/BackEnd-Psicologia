@@ -17,5 +17,8 @@
         public string RutaVideo { get; set; }
         public List<KeyWordDto> KeyWords { get; set; }
         public int IdBlog { get; set; }
+        public bool Estado { get; set; }
+        public int? Idcategoria { get; set; }
+        public DateTime Fechaactualizacion { get; set; }
     }
 }

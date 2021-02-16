@@ -19,5 +19,6 @@
         public List<KeyWordDto> KeyWords { get; set; }
         public int IdBlog { get; set; }
         public string NombreImagen { get; set; }
+        public bool Estado { get; set; }
     }
 }
