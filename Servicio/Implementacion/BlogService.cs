@@ -366,12 +366,12 @@
         /// Guarda la imagen de un blog en el servidor
         /// </summary>
         /// <param name="formFile"></param>
-        public string GuardarImagenServidor(IFormFile formFile)
+        public string GuardarImagenServidor(IFormFile formFile, string folder)
         {
             try
             {
                 string ruta = "";
-                var folderName = Path.Combine("Resources", "Images");
+                var folderName = Path.Combine("Resources", folder);
                 var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
                 if (formFile.Length > 0)
                 {
@@ -385,6 +385,28 @@
                     }
                 }
                 return ruta;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+
+        /// <summary>
+        /// Elimina un archivo del servidor
+        /// </summary>
+        /// <param name="fileName"></param>
+        private void EliminarImagenServidor(string fileName)
+        {
+            try
+            {
+                fileName = fileName[17..];
+                string file = Path.Combine("Resources", "Images", fileName);
+                if (File.Exists(file))
+                {
+                    File.Delete(file);
+                }
             }
             catch (Exception)
             {
@@ -435,6 +457,233 @@
             }
         }
 
+        /// <summary>
+        /// Actualiza un post
+        /// </summary>
+        /// <param name="blogDto"></param>
+        /// <returns></returns>
+        public ApiCallResult ActualizarEntradaPost(BlogDetalleDto blogDto)
+        {
+            try
+            {
+                Blogs blogs = this.blogRepository.ObtenerSlug(blogDto.Slug);
+                blogs.Titulo = blogDto.Titulo ?? blogs.Titulo;
+                blogs.Autorcita = blogDto.AutorCita ?? blogs.Autorcita;
+                blogs.Cita = blogDto.Cita ?? blogs.Cita;
+                blogs.Descripcion = blogDto.Descripcion ?? blogs.Descripcion;
+                blogs.Fechaactualizacion = DateTime.Now;
+                blogs.Subtitulo = blogDto.SubTitulo ?? blogs.Subtitulo;
+                if (blogDto.ImagenPost != null)
+                {
+                    Imagenes imagen = this.blogRepository.BuscarMultimedia(blogs.Idimagen);
+                    if (imagen is null)
+                        throw new NegocioExecption("Error al guardar la imagen, contacta con el admin, " +
+                            "ningun dato se actualizo", 500);
+                    this.EliminarImagenServidor(imagen.Ruta);
+                    this.ActualizarImagenBaseDatos(blogDto.ImagenPost, blogs.Idimagen);
+                }
+                if (blogDto.KeyWords != null)
+                    this.ActualizarBlogKey(blogDto.KeyWords, blogs.Idblog);
+                this.blogRepository.ActualizarEntrada(blogs);
+
+                return new ApiCallResult
+                {
+                    Estado = true,
+                    Mensaje = "Post actualizado con extido"
+                };
+            }
+            catch (NegocioExecption)
+            {
+                throw;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Actualiza la ruta de la imagen en la base de datos
+        /// </summary>
+        /// <param name="rutaImagen"></param>
+        /// <param name="idImagen"></param>
+        private void ActualizarImagenBaseDatos(string rutaImagen, int? idImagen)
+        {
+            try
+            {
+                Imagenes imagen = this.blogRepository.BuscarMultimedia(idImagen);
+                if (imagen is null)
+                {
+                    throw new NegocioExecption("No se ha podido guardar bien la imagen", 500);
+                }
+
+                imagen.Nombre = rutaImagen;
+                imagen.Ruta = rutaImagen;
+
+                this.blogRepository.ActualizarMultimedia(imagen);
+            }
+            catch (NegocioExecption)
+            {
+                throw;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Actualiza la entrada mtm de blogs
+        /// </summary>
+        /// <param name="keyWordDtos"></param>
+        /// <param name="idBlog"></param>
+        private void ActualizarBlogKey(List<KeyWordDto> keyWordDtos, int idBlog)
+        {
+            try
+            {
+                List<BlogKey> blogKeys = this.blogRepository.ListarBlogKeys(idBlog);
+                if (blogKeys is null)
+                    throw new NegocioExecption("No existen keys para actualizar", 500);
+                this.blogRepository.ElimniarBlogKeys(blogKeys);
+                this.GuardarKeyWords(keyWordDtos, idBlog);
+            }
+            catch (NegocioExecption)
+            {
+                throw;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Elimina un post y todas sus relaciones
+        /// </summary>
+        /// <param name="slug"></param>
+        /// <returns></returns>
+        public ApiCallResult EliminarEntradaPost(string slug)
+        {
+            try
+            {
+                Blogs blog = this.blogRepository.ObtenerSlug(slug);
+                if (blog is null)
+                    throw new NegocioExecption("Error al elimnar este post, no se pudo encontrar", 500);
+                using (TransactionScope scope = new TransactionScope())
+                {
+                    this.EliminarBlogKey(blog.Idblog);
+                    this.blogRepository.EliminarEntrada(blog);
+                    #region Imagenes
+                    Imagenes imagen = this.blogRepository.BuscarMultimedia(blog.Idimagen);
+                    if (imagen is null)
+                        throw new NegocioExecption("Error al guardar la imagen, contacta con el admin, " +
+                            "ningun dato se actualizo", 500);
+                    this.blogRepository.EliminarMultiMediaEntrada(imagen);
+                    #endregion
+                    this.EliminarImagenServidor(imagen.Ruta);
+                    scope.Complete();
+                }
+                return new ApiCallResult
+                {
+                    Estado = true,
+                    Mensaje = "Post eliminado con exito"
+                };
+            }
+            catch (NegocioExecption)
+            {
+                throw;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Elimina la relacion mtm de blog y keywords
+        /// </summary>
+        /// <param name="idBlog"></param>
+        private void EliminarBlogKey(int idBlog)
+        {
+            try
+            {
+                List<BlogKey> blogKeys = this.blogRepository.ListarBlogKeys(idBlog);
+                if (blogKeys.Count > 0)
+                    this.blogRepository.ElimniarBlogKeys(blogKeys);
+                else
+                    throw new NegocioExecption("No se encontro palabras clave para este post", 500);
+            }
+            catch (NegocioExecption)
+            {
+                throw;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        
+        /// <summary>
+        /// Guarda una categoria
+        /// </summary>
+        /// <param name="categoria"></param>
+        /// <returns></returns>
+        public ApiCallResult GuardarCategoria(string categoria)
+        {
+            try
+            {
+                Categorias categorias = this.blogRepository.ObtenerCategoria(categoria);
+                if (categorias != null)
+                    throw new NegocioExecption("Esta categoria ya existe, intenta con otro nombre", 500);
+                categorias = new Categorias
+                {
+                    Estado = true,
+                    Fechacreacion = DateTime.Now,
+                    Nombre = categoria
+                };
+                this.blogRepository.GuardarCategoria(categorias);
+                return new ApiCallResult
+                {
+                    Estado = true,
+                    Mensaje = "Categoria guardada"
+                };
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Guardar palabra clave
+        /// </summary>
+        /// <param name="keyWord"></param>
+        /// <returns></returns>
+        public ApiCallResult GuardarKeyWord(string keyWord)
+        {
+            try
+            {
+                KeyWords keyWords = this.blogRepository.ObtenerKeywords(keyWord);
+                if (keyWords != null)
+                    throw new NegocioExecption("Esta palabra clave ya existe, intenta con otro nombre", 500);
+                keyWords = new KeyWords
+                {
+                    Estado = true,
+                    Fechacreacion = DateTime.Now,
+                    Nombre = keyWord
+                };
+                this.blogRepository.GuardarKeyWords(keyWords);
+                return new ApiCallResult
+                {
+                    Estado = true,
+                    Mensaje = "Palabra clave creada"
+                };
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
         #endregion
     }
 }

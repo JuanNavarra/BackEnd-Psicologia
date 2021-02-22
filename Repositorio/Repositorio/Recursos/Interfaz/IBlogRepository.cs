@@ -123,5 +123,27 @@
         /// </summary>
         /// <param name="multimedia"></param>
         public void ActualizarMultimedia(Imagenes multimedia);
+        /// <summary>
+        /// Obtiene una categoria
+        /// </summary>
+        /// <param name="categoria"></param>
+        /// <returns></returns>
+        public Categorias ObtenerCategoria(string categoria);
+        /// <summary>
+        /// Guarda una categoria
+        /// </summary>
+        /// <param name="categoria"></param>
+        public void GuardarCategoria(Categorias categoria);
+        /// <summary>
+        /// Obtiene una keyWord
+        /// </summary>
+        /// <param name="keyWord"></param>
+        /// <returns></returns>
+        public KeyWords ObtenerKeywords(string keyWord);
+        /// <summary>
+        /// Guarda una categoria
+        /// </summary>
+        /// <param name="keyWord"></param>
+        public void GuardarKeyWords(KeyWords keyWord);
     }
 }

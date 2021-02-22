@@ -158,8 +158,9 @@
                                                    Imagen = t1.Ruta,
                                                    Titulo = t0.Titulo,
                                                    Tipo = t0.Tipo,
-                                               }).Take(5).ToList();
-                return posts.OrderByDescending(o => o.FechaCreacion).ToList(); ;
+                                                   IdBlog = t0.Idblog
+                                               }).OrderByDescending(o => o.IdBlog).Take(5).ToList();
+                return posts;
             }
             catch (Exception)
             {
@@ -489,6 +490,74 @@
             {
                 context.Imagenes.Update(multimedia);
                 context.SaveChanges();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Obtiene una categoria
+        /// </summary>
+        /// <param name="categoria"></param>
+        /// <returns></returns>
+        public Categorias ObtenerCategoria(string categoria)
+        {
+            try
+            {
+                return this.context.Categorias.Where(w => w.Nombre.Trim() == categoria.Trim()).FirstOrDefault();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Guarda una categoria
+        /// </summary>
+        /// <param name="categoria"></param>
+        public void GuardarCategoria(Categorias categoria)
+        {
+            try
+            {
+                this.context.Add(categoria);
+                this.context.SaveChanges();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Obtiene una keyWord
+        /// </summary>
+        /// <param name="keyWord"></param>
+        /// <returns></returns>
+        public KeyWords ObtenerKeywords(string keyWord)
+        {
+            try
+            {
+                return this.context.KeyWords.Where(w => w.Nombre.Trim() == keyWord.Trim()).FirstOrDefault();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Guarda una categoria
+        /// </summary>
+        /// <param name="keyWord"></param>
+        public void GuardarKeyWords(KeyWords keyWord)
+        {
+            try
+            {
+                this.context.Add(keyWord);
+                this.context.SaveChanges();
             }
             catch (Exception)
             {

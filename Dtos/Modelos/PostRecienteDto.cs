@@ -11,5 +11,6 @@
         public string Imagen { get; set; }
         public string Tipo { get; set; }
         public DateTime FechaCreacion { get; set; }
+        public int IdBlog { get; set; }
     }
 }

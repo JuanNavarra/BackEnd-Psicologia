@@ -28,5 +28,7 @@
         public string Tipo { get; set; }
         public string IdVideo { get; set; }
         public string NombreImagen { get; set; }
+        public DateTime Fechaactualizacion { get; set; }
+        public string Rutaaudio { get; set; }
     }
 }

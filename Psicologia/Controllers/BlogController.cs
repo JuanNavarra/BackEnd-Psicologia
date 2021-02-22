@@ -334,7 +334,7 @@
             try
             {
                 formFile = Request.Form.Files[0];
-                string ruta = this.blogService.GuardarImagenServidor(formFile);
+                string ruta = this.blogService.GuardarImagenServidor(formFile, "Images");
                 return StatusCode((int)System.Net.HttpStatusCode.OK, ruta);
             }
             catch (NegocioExecption e)
@@ -363,6 +363,112 @@
             try
             {
                 ApiCallResult result = this.youtubeService.CambiarEstadoEntrada(slug);
+                return StatusCode((int)System.Net.HttpStatusCode.OK, result);
+            }
+            catch (NegocioExecption e)
+            {
+                return StatusCode((int)System.Net.HttpStatusCode.NotFound, e.Message);
+            }
+            catch (Exception e)
+            {
+                return StatusCode((int)System.Net.HttpStatusCode.InternalServerError, e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Actualizar una entrada de post
+        /// </summary>
+        /// <param name="blog"></param>
+        /// <returns></returns>
+        [HttpPut("actualizar-entrada-post")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult ActualizarEntradaPost(BlogDetalleDto blogDto)
+        {
+            try
+            {
+                ApiCallResult result = this.blogService.ActualizarEntradaPost(blogDto);
+                return StatusCode((int)System.Net.HttpStatusCode.OK, result);
+            }
+            catch (NegocioExecption e)
+            {
+                return StatusCode((int)System.Net.HttpStatusCode.NotFound, e.Message);
+            }
+            catch (Exception e)
+            {
+                return StatusCode((int)System.Net.HttpStatusCode.InternalServerError, e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Elimina un post y todas sus entradas
+        /// </summary>
+        /// <param name="blog"></param>
+        /// <returns></returns>
+        [HttpDelete("eliminar-entrada-post/{slug}")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult EliminarEntradaPost(string slug)
+        {
+            try
+            {
+                ApiCallResult result = this.blogService.EliminarEntradaPost(slug);
+                return StatusCode((int)System.Net.HttpStatusCode.OK, result);
+            }
+            catch (NegocioExecption e)
+            {
+                return StatusCode((int)System.Net.HttpStatusCode.NotFound, e.Message);
+            }
+            catch (Exception e)
+            {
+                return StatusCode((int)System.Net.HttpStatusCode.InternalServerError, e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Guarda las categorias
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("guardar-categoria")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult GuardarCategorias(CategoriasDto categoria)
+        {
+            try
+            {
+                ApiCallResult result = this.blogService.GuardarCategoria(categoria.Nombre);
+                return StatusCode((int)System.Net.HttpStatusCode.OK, result);
+            }
+            catch (NegocioExecption e)
+            {
+                return StatusCode((int)System.Net.HttpStatusCode.NotFound, e.Message);
+            }
+            catch (Exception e)
+            {
+                return StatusCode((int)System.Net.HttpStatusCode.InternalServerError, e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Guarda las palabras clave
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("guardar-keyWord")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult GuardarKeyWords(KeyWordDto keyWordDto)
+        {
+            try
+            {
+                ApiCallResult result = this.blogService.GuardarKeyWord(keyWordDto.Nombre);
                 return StatusCode((int)System.Net.HttpStatusCode.OK, result);
             }
             catch (NegocioExecption e)

@@ -73,7 +73,7 @@
         /// Guarda la imagen de un blog
         /// </summary>
         /// <param name="formFile"></param>
-        public string GuardarImagenServidor(IFormFile formFile);
+        public string GuardarImagenServidor(IFormFile formFile, string folder);
         /// <summary>
         /// Lista todas las categorias
         /// </summary>
@@ -84,5 +84,29 @@
         /// </summary>
         /// <param name="blogKeys"></param>
         public void GuardarKeyWords(List<KeyWordDto> keyDto, int blogs);
+        /// <summary>
+        /// Actualiza un post
+        /// </summary>
+        /// <param name="blogDto"></param>
+        /// <returns></returns>
+        public ApiCallResult ActualizarEntradaPost(BlogDetalleDto blogDto);
+        /// <summary>
+        /// Elimina un post y todas sus relaciones
+        /// </summary>
+        /// <param name="slug"></param>
+        /// <returns></returns>
+        public ApiCallResult EliminarEntradaPost(string slug);
+        /// <summary>
+        /// Guarda una categoria
+        /// </summary>
+        /// <param name="categoria"></param>
+        /// <returns></returns>
+        public ApiCallResult GuardarCategoria(string categoria);
+        /// <summary>
+        /// Guardar palabra clave
+        /// </summary>
+        /// <param name="keyWord"></param>
+        /// <returns></returns>
+        public ApiCallResult GuardarKeyWord(string keyWord);
     }
 }

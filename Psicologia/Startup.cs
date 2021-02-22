@@ -41,6 +41,7 @@ namespace Psicologia
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             services.AddScoped<IUsuarioService, UsuarioService>();
             services.AddScoped<IYoutubeService, YoutubeService>();
+            services.AddScoped<IPodcastService, PodcastService>();
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
