@@ -328,23 +328,27 @@
                 if (usuario is null)
                     throw new NegocioExecption($"Error de logeo con {blogDto.Creador}", 401);
 
-                #region Guardar imagenes
-                this.GuardarImagenPost(blogDto.ImagenPost);
-                #endregion
-                #region Guardar post
-                blogDto.Idcreador = usuario.Idusuario;
-                blogDto.Idimagen = this.BuscarImagenPorRuta(blogDto.ImagenPost);
-                blogDto.FechaCreacion = DateTime.Now;
-                blogDto.Tipo = "PO";
-                blogDto.Estado = true;
-                Blogs blog = mapper.Map<Blogs>(blogDto);
-                this.blogRepository.GuardarPost(blog);
-                #endregion
+                using (TransactionScope scope = new TransactionScope())
+                {
+                    #region Guardar imagenes
+                    this.GuardarImagenPost(blogDto.ImagenPost);
+                    #endregion
+                    #region Guardar post
+                    blogDto.Idcreador = usuario.Idusuario;
+                    blogDto.Idimagen = this.BuscarImagenPorRuta(blogDto.ImagenPost);
+                    blogDto.FechaCreacion = DateTime.Now;
+                    blogDto.Tipo = "PO";
+                    blogDto.Estado = true;
+                    Blogs blog = mapper.Map<Blogs>(blogDto);
+                    this.blogRepository.GuardarPost(blog);
+                    #endregion
 
-                #region Guardar keywords
-                Blogs blogCreado = this.blogRepository.ObtenerSlug(blogDto.Slug);
-                this.GuardarKeyWords(blogDto.KeyWords, blogCreado.Idblog);
-                #endregion
+                    #region Guardar keywords
+                    Blogs blogCreado = this.blogRepository.ObtenerSlug(blogDto.Slug);
+                    this.GuardarKeyWords(blogDto.KeyWords, blogCreado.Idblog);
+                    #endregion
+                    scope.Complete();
+                }
 
                 return new ApiCallResult
                 {
@@ -397,12 +401,14 @@
         /// Elimina un archivo del servidor
         /// </summary>
         /// <param name="fileName"></param>
-        private void EliminarImagenServidor(string fileName)
+        private void EliminarImagenServidor(string fileName, string tipo)
         {
             try
             {
-                fileName = fileName[17..];
-                string file = Path.Combine("Resources", "Images", fileName);
+                string folder = tipo.Equals("PO") ? "Images" : "Podcast";
+                int rango = tipo.Equals("PO") ? 17 : 18;
+                fileName = fileName[rango..];
+                string file = Path.Combine("Resources", folder, fileName);
                 if (File.Exists(file))
                 {
                     File.Delete(file);
@@ -479,7 +485,7 @@
                     if (imagen is null)
                         throw new NegocioExecption("Error al guardar la imagen, contacta con el admin, " +
                             "ningun dato se actualizo", 500);
-                    this.EliminarImagenServidor(imagen.Ruta);
+                    this.EliminarImagenServidor(imagen.Ruta, blogs.Tipo);
                     this.ActualizarImagenBaseDatos(blogDto.ImagenPost, blogs.Idimagen);
                 }
                 if (blogDto.KeyWords != null)
@@ -580,7 +586,7 @@
                             "ningun dato se actualizo", 500);
                     this.blogRepository.EliminarMultiMediaEntrada(imagen);
                     #endregion
-                    this.EliminarImagenServidor(imagen.Ruta);
+                    this.EliminarImagenServidor(imagen.Ruta, blog.Tipo);
                     scope.Complete();
                 }
                 return new ApiCallResult
@@ -622,7 +628,7 @@
                 throw;
             }
         }
-        
+
         /// <summary>
         /// Guarda una categoria
         /// </summary>

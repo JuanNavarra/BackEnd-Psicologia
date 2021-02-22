@@ -64,16 +64,16 @@
                 string[] rutaArray = rutaYoutube.Split("watch?v=");
                 if (rutaArray != null)
                 {
-                    if (rutaArray.Length >= 1)
+                    if (rutaArray.Length >= 2)
                     {
                         rutaArray = rutaArray[1].Split('&');
                         videoId = rutaArray[0];
                     }
                     else
-                        throw new NegocioExecption("Ha ocurrido un error en el servidor al guardar el video", 500);
+                        throw new NegocioExecption("Haz copiado mal la url del video, revisala bien", 500);
                 }
                 else
-                    throw new NegocioExecption("Haz copiado mal la url del video, revisala bien", 500);
+                    throw new NegocioExecption("Ha ocurrido un error en el servidor al guardar el video", 500);
 
                 ImagenesDto videosDto = new ImagenesDto()
                 {
@@ -117,21 +117,24 @@
                 if (usuario is null)
                     throw new NegocioExecption($"Error de logeo con {youtubeDto.Creador}", 401);
                 #endregion
+                using (TransactionScope scope = new TransactionScope())
+                {
+                    #region Guardar Entrada
+                    youtubeDto.IdVideo = this.GuardarRutaYoutube(youtubeDto.Rutavideo);
+                    youtubeDto.Tipo = "YO";
+                    youtubeDto.Estado = true;
+                    youtubeDto.Fechacreacion = DateTime.Now;
+                    youtubeDto.Idcreador = usuario.Idusuario;
+                    Blogs blog = mapper.Map<Blogs>(youtubeDto);
+                    this.repository.GuardarPost(blog);
+                    #endregion
 
-                #region Guardar Entrada
-                youtubeDto.IdVideo = this.GuardarRutaYoutube(youtubeDto.Rutavideo);
-                youtubeDto.Tipo = "YO";
-                youtubeDto.Estado = true;
-                youtubeDto.Fechacreacion = DateTime.Now;
-                youtubeDto.Idcreador = usuario.Idusuario;
-                Blogs blog = mapper.Map<Blogs>(youtubeDto);
-                this.repository.GuardarPost(blog);
-                #endregion
-
-                #region Guardar Keywords
-                Blogs blogCreado = this.repository.ObtenerSlug(youtubeDto.Slug);
-                this.blogService.GuardarKeyWords(youtubeDto.KeyWords, blogCreado.Idblog);
-                #endregion
+                    #region Guardar Keywords
+                    Blogs blogCreado = this.repository.ObtenerSlug(youtubeDto.Slug);
+                    this.blogService.GuardarKeyWords(youtubeDto.KeyWords, blogCreado.Idblog);
+                    #endregion
+                    scope.Complete();
+                }
                 return new ApiCallResult
                 {
                     Estado = true,

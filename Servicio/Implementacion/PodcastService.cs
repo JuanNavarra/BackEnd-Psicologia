@@ -10,6 +10,7 @@
     using System.IO;
     using System.Linq;
     using System.Text;
+    using System.Transactions;
 
     public class PodcastService : IPodcastService
     {
@@ -157,24 +158,27 @@
                 UsuarioDto usuario = this.usuarioService.VerificarUsuario(blogDetalleDto.Creador);
                 if (usuario is null)
                     throw new NegocioExecption($"Error de logeo con {blogDetalleDto.Creador}", 401);
+                using (TransactionScope scope = new TransactionScope())
+                {
+                    #region Guardar imagenes
+                    this.GuardarAudioPodcast(blogDetalleDto.Rutaaudio);
+                    #endregion
+                    #region Guardar post
+                    blogDetalleDto.Idcreador = usuario.Idusuario;
+                    blogDetalleDto.Idimagen = this.BuscarImagenPorRuta(blogDetalleDto.Rutaaudio);
+                    blogDetalleDto.FechaCreacion = DateTime.Now;
+                    blogDetalleDto.Tipo = "PC";
+                    blogDetalleDto.Estado = true;
+                    Blogs blog = mapper.Map<Blogs>(blogDetalleDto);
+                    this.repository.GuardarPost(blog);
+                    #endregion
 
-                #region Guardar imagenes
-                this.GuardarAudioPodcast(blogDetalleDto.Rutaaudio);
-                #endregion
-                #region Guardar post
-                blogDetalleDto.Idcreador = usuario.Idusuario;
-                blogDetalleDto.Idimagen = this.BuscarImagenPorRuta(blogDetalleDto.Rutaaudio);
-                blogDetalleDto.FechaCreacion = DateTime.Now;
-                blogDetalleDto.Tipo = "PC";
-                blogDetalleDto.Estado = true;
-                Blogs blog = mapper.Map<Blogs>(blogDetalleDto);
-                this.repository.GuardarPost(blog);
-                #endregion
-
-                #region Guardar keywords
-                Blogs blogCreado = this.repository.ObtenerSlug(blogDetalleDto.Slug);
-                this.blogService.GuardarKeyWords(blogDetalleDto.KeyWords, blogCreado.Idblog);
-                #endregion
+                    #region Guardar keywords
+                    Blogs blogCreado = this.repository.ObtenerSlug(blogDetalleDto.Slug);
+                    this.blogService.GuardarKeyWords(blogDetalleDto.KeyWords, blogCreado.Idblog);
+                    #endregion
+                    scope.Complete();
+                }
 
                 return new ApiCallResult
                 {
@@ -332,7 +336,11 @@
                 throw;
             }
         }
-
+        /// <summary>
+        /// Actualiza un video de youtube por la base de datos
+        /// </summary>
+        /// <param name="rutaAudio"></param>
+        /// <param name="idImagen"></param>
         private void ActualizarAudioBaseDatos(string rutaAudio, int? idImagen)
         {
             try
