@@ -83,18 +83,17 @@
         /// <summary>
         /// Lista los ultimos 5 post mas recientes
         /// </summary>
-        /// <param name="page"></param>
         /// <returns></returns>
-        [HttpGet("ultimos-post/{page}")]
+        [HttpGet("ultimos-post")]
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult ListarRecientes(string page)
+        public IActionResult ListarRecientes()
         {
             try
             {
-                List<PostRecienteDto> posts = this.blogService.ListarRecientes(page);
+                List<PostRecienteDto> posts = this.blogService.ListarRecientes();
                 return Json(posts);
             }
             catch (NegocioExecption e)

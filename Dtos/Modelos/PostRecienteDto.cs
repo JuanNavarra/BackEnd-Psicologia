@@ -12,8 +12,5 @@
         public string Tipo { get; set; }
         public DateTime FechaCreacion { get; set; }
         public int IdBlog { get; set; }
-        public List<KeyWordDto> keyWords { get; set; }
-        public string Categoria { get; set; }
-        public string Descripcion { get; set; }
     }
 }
