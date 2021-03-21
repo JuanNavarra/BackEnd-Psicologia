@@ -24,6 +24,7 @@
         public virtual DbSet<Comentarios> Comentarios { get; set; }
         public virtual DbSet<FaqDetalle> FaqDetalle { get; set; }
         public virtual DbSet<Faqs> Faqs { get; set; }
+        public virtual DbSet<Principal> Principal { get; set; }
         #endregion
 
         #region Fluent Api
@@ -303,6 +304,22 @@
                 entity.Property(e => e.Titulo)
                     .IsRequired()
                     .HasColumnName("titulo");
+            });
+
+            modelBuilder.Entity<Principal>(entity =>
+            {
+                entity.HasKey(e => e.Idprincipal);
+
+                entity.ToTable("Principal", "rec");
+
+                entity.Property(e => e.Idprincipal)
+                    .HasColumnName("idprincipal");
+
+                entity.Property(e => e.Idimagen).HasColumnName("idimagen");
+                entity.Property(e => e.Descripcion)
+                    .IsRequired()
+                    .HasColumnName("descripcion");
+                entity.Property(e => e.Estado).HasColumnName("estado");
             });
 
             OnModelCreatingPartial(modelBuilder);

@@ -75,15 +75,18 @@
             }
         }
 
+
+
         /// <summary>
         /// Lista los 5 post mas recientes
         /// </summary>
+        /// <param name="page"></param>
         /// <returns></returns>
-        public List<PostRecienteDto> ListarRecientes()
+        public List<PostRecienteDto> ListarRecientes(string page)
         {
             try
             {
-                List<PostRecienteDto> posts = this.blogRepository.ListarRecientes();
+                List<PostRecienteDto> posts = this.blogRepository.ListarRecientes(page);
                 return posts;
             }
             catch (Exception)
