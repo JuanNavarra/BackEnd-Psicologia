@@ -26,8 +26,9 @@
         /// <summary>
         /// Lista los 5 post mas recientes
         /// </summary>
+        /// <param name="page"></param>
         /// <returns></returns>
-        public List<PostRecienteDto> ListarRecientes();
+        public List<PostRecienteDto> ListarRecientes(string page);
         /// <summary>
         /// Lista todos los comentarios de un post en especifico
         /// </summary>

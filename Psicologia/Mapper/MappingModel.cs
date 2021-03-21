@@ -57,7 +57,6 @@ namespace Psicologia
                 .ForMember(s => s.Rutaaudio, option => option.MapFrom(o => o.ImagenPost));
             CreateMap<PodcastDto, BlogDetalleDto>()
                 .ForMember(s => s.ImagenPost, option => option.MapFrom(o => o.Rutaaudio));
-
         }
         #endregion
     }
