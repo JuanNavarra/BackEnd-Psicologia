@@ -143,36 +143,22 @@
         /// <summary>
         /// Lista los 5 post mas recientes
         /// </summary>
-        /// <param name="page"></param>
         /// <returns></returns>
-        public List<PostRecienteDto> ListarRecientes(string page)
+        public List<PostRecienteDto> ListarRecientes()
         {
             try
             {
                 List<PostRecienteDto> posts = (from t0 in context.Blogs
                                                join t1 in context.Imagenes on t0.Idimagen equals t1.Idimagen
-                                               join t3 in context.Categorias on t0.Idcategoria equals t3.Idcategoria
-                                               where t0.Estado && 
-                                               (page == "PR" ? t0.Tipo == "PO" || t0.Tipo == "PC" : page != "YO" || t0.Tipo == "YO") 
+                                               where t0.Estado
                                                select new PostRecienteDto
                                                {
                                                    FechaCreacion = t0.Fechacreacion,
                                                    Slug = t0.Slug,
-                                                   Categoria = t3.Nombre,
                                                    Imagen = t1.Ruta,
                                                    Titulo = t0.Titulo,
-                                                   Descripcion = t0.Descripcion.Length > 200 ? t0.Descripcion.Substring(0, 199) : t0.Descripcion,
                                                    Tipo = t0.Tipo,
-                                                   IdBlog = t0.Idblog,
-                                                   keyWords = (from t7 in context.Blogs
-                                                               join t1 in context.BlogKey on t0.Idblog equals t1.Idblog
-                                                               join t2 in context.KeyWords on t1.Idkey equals t2.Idkey
-                                                               where t7.Idblog == t0.Idblog
-                                                               select new KeyWordDto
-                                                               {
-                                                                   Id = t2.Idkey,
-                                                                   Nombre = t2.Nombre
-                                                               }).ToList()
+                                                   IdBlog = t0.Idblog
                                                }).OrderByDescending(o => o.IdBlog).Take(5).ToList();
                 return posts;
             }
