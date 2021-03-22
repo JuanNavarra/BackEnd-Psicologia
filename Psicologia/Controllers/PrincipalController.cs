@@ -122,7 +122,7 @@ namespace Psicologia
         /// </summary>
         /// <returns></returns>
         [HttpPut("actualizar-contenido-principal")]
-        [AllowAnonymous]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
